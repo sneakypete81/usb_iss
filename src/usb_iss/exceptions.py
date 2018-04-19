@@ -1,0 +1,2 @@
+class UsbIssError(Exception):
+    pass
