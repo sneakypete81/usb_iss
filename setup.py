@@ -39,6 +39,6 @@ setup(
     name='usb_iss',
     packages=find_packages(include=['usb_iss']),
     url='https://github.com/sneakypete81/usb_iss',
-    version='0.0.0',
+    version='0.0.1',
     zip_safe=False,
 )
