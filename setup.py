@@ -40,6 +40,6 @@ setup(
     packages=find_packages('src'),
     package_dir={'': 'src'},
     url='https://github.com/sneakypete81/usb_iss',
-    version='0.0.2',
+    version='0.1.0',
     zip_safe=False,
 )
