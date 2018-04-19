@@ -3,6 +3,7 @@ from . import defs
 
 I2C_RD = 0x01
 
+
 class I2C(object):
     def __init__(self, drv):
         self._drv = drv
@@ -33,7 +34,8 @@ class I2C(object):
                 "Attempted to write %d bytes, maximum is %d" %
                 (len(data), defs.I2C_AD1_MAX_WRITE_BYTE_COUNT))
         address = address & ~I2C_RD
-        self._drv.write_cmd(defs.I2C_AD1, [address, register, len(data)] + data)
+        self._drv.write_cmd(defs.I2C_AD1,
+                            [address, register, len(data)] + data)
         self._drv.check_i2c_ack()
 
     def read_ad1(self, address, register, byte_count):
@@ -53,7 +55,8 @@ class I2C(object):
         address = address & ~I2C_RD
         reg_high = register >> 8
         reg_low = register & 0xFF
-        self._drv.write_cmd(defs.I2C_AD2, [address, reg_high, reg_low, len(data)] + data)
+        self._drv.write_cmd(defs.I2C_AD2,
+                            [address, reg_high, reg_low, len(data)] + data)
         self._drv.check_i2c_ack()
 
     def read_ad2(self, address, register, byte_count):
@@ -64,7 +67,8 @@ class I2C(object):
         address = address | I2C_RD
         reg_high = register >> 8
         reg_low = register & 0xFF
-        self._drv.write_cmd(defs.I2C_AD2, [address, reg_high, reg_low, byte_count])
+        self._drv.write_cmd(defs.I2C_AD2,
+                            [address, reg_high, reg_low, byte_count])
         return self._drv.read(byte_count)
 
     def direct(self, data):

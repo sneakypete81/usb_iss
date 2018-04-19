@@ -4,7 +4,8 @@ from .exceptions import UsbIssError
 from . import defs
 
 # In Py2, bytes means str, and there's no immutable byte array defined.
-# Use bytearray instead - this is mutable, but otherwise equivalent to Py3 bytes.
+# Use bytearray instead - this is mutable, but otherwise equivalent to
+# Python3's bytes.
 if isinstance(bytes(), str):
     bytes = bytearray
 
@@ -16,6 +17,7 @@ SERIAL_OPTS = {
     'xonxoff': False,
     'timeout': 0.5,
 }
+
 
 class Driver(object):
     def __init__(self):
@@ -63,5 +65,6 @@ class Driver(object):
         data = self.read(2)
         if data[0] != defs.USB_ISS_ACK:
             raise UsbIssError(
-                "Received [0x%02X, 0x%02X] instead of ACK" % (data[0], data[1]))
+                "Received [0x%02X, 0x%02X] instead of ACK"
+                % (data[0], data[1]))
         return data[1]

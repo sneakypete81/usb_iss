@@ -4,9 +4,11 @@ from .i2c import I2C
 from .io import IO
 
 # In Py2, bytes means str, and there's no immutable byte array defined.
-# Use bytearray instead - this is mutable, but otherwise equivalent to Py3 bytes.
+# Use bytearray instead - this is mutable, but otherwise equivalent to
+# Python3's bytes.
 if isinstance(bytes(), str):
     bytes = bytearray
+
 
 class UsbIss(object):
     def __init__(self):

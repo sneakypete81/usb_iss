@@ -61,7 +61,7 @@ develop: venv ## install into a virtualenv
 	. .venv/bin/activate; pip install -e .
 
 lint: ## check style with flake8
-	. .venv/bin/activate; flake8 usb_iss tests
+	. .venv/bin/activate; flake8 src tests
 
 test: ## run tests quickly with the default Python
 	. .venv/bin/activate; nosetests
