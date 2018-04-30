@@ -2,7 +2,6 @@
 USB-ISS Python Library
 ======================
 
-
 .. image:: https://img.shields.io/pypi/v/usb_iss.svg
         :target: https://pypi.python.org/pypi/usb_iss
 
@@ -13,21 +12,18 @@ USB-ISS Python Library
      :target: https://pyup.io/repos/github/sneakypete81/usb_iss/
      :alt: Updates
 
-
-
-Python library for the USB-ISS board.
-
-
-* Free software: GNU General Public License v3
-
+Python library for the USB-ISS module.
+See https://www.robot-electronics.co.uk/htm/usb_iss_tech.htm for the full USB ISS board documentation
 
 Features
 --------
 
-* TODO
+* I2C Mode
+* IO Mode (not yet implemented)
+* SPI Mode (not yet implemented)
+* Serial Mode (not yet implemented)
 
-Credits
--------
+----
 
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
 
