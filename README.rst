@@ -29,6 +29,27 @@ Features
 * SPI Mode (not yet implemented)
 * Serial Mode (not yet implemented)
 
+Usage Example
+-------------
+.. code-block:: python
+
+    from usb_iss import UsbIss, defs
+
+    # Configure I2C mode
+
+    iss = UsbIss()
+    iss.open("COM3")
+    iss.setup_i2c(defs.ISS_MODE_I2C_H_100KHZ)
+
+    # Write and read back some data
+
+    iss.i2c.write_ad1(0xC4, 0, [0, 1, 2]);
+    data = iss.i2c.read_ad1(0xC4, 0, 3)
+
+    print(data)
+    # [0, 1, 2]
+
+
 ----
 
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
