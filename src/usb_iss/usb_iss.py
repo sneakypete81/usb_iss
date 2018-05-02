@@ -29,7 +29,9 @@ class UsbIss(object):
     def change_io(self):
         raise NotImplementedError
 
-    def setup_i2c(self, i2c_mode, io1_type, io2_type):
+    def setup_i2c(self, i2c_mode,
+                  io1_type=defs.IO_TYPE_IO1_DIGITAL_INPUT,
+                  io2_type=defs.IO_TYPE_IO2_DIGITAL_INPUT):
         assert io1_type in defs.IO1_TYPES
         assert io2_type in defs.IO2_TYPES
 
