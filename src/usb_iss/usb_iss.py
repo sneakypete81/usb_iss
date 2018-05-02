@@ -1,5 +1,5 @@
 from . import defs
-from .driver import Driver
+from .driver import Driver, DummyDriver
 from .i2c import I2C
 from .io import IO
 
@@ -11,8 +11,8 @@ if isinstance(bytes(), str):
 
 
 class UsbIss(object):
-    def __init__(self):
-        self._drv = Driver()
+    def __init__(self, dummy=False):
+        self._drv = DummyDriver() if dummy else Driver()
         self.i2c = I2C(self._drv)
         self.io = IO(self._drv)
 

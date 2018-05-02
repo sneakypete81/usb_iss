@@ -68,3 +68,26 @@ class Driver(object):
                 "Received [0x%02X, 0x%02X] instead of ACK"
                 % (data[0], data[1]))
         return data[1]
+
+
+class DummyDriver(object):
+    def open(self, _):
+        return self
+
+    def close(self):
+        pass
+
+    def write_cmd(self, command, data=None):
+        pass
+
+    def read(self, byte_count):
+        return list(range(byte_count))
+
+    def check_i2c_ack(self):
+        pass
+
+    def check_ack(self):
+        pass
+
+    def check_ack_error_code(self):
+        return 0
