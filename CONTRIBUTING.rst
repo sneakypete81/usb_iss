@@ -68,7 +68,7 @@ Ready to contribute? Here's how to set up `usb_iss` for local development.
 
     $ pip install virtualenv
     $ make develop
-    $ .venv/bin/activate
+    $ . .venv/bin/activate
 
 4. Create a branch for local development::
 
