@@ -1,15 +1,13 @@
 USB ISS Python Module
 =====================
 
+Contents
+--------
+
 .. toctree::
    :maxdepth: 1
-   :caption: Contents:
 
-   readme
+   Getting Started <readme>
    contributing
    history
-
-Module Documentation
---------------------
-* :ref:`modindex`
-* :ref:`search`
+   API Documentation <usb_iss>

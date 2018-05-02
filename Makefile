@@ -78,7 +78,7 @@ coverage: ## check code coverage quickly with the default Python
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/usb_iss.rst
 	rm -f docs/modules.rst
-	. .venv/bin/activate; sphinx-apidoc -o docs/ src
+	. .venv/bin/activate; sphinx-apidoc --module-first -o docs/ src
 	. .venv/bin/activate; $(MAKE) -C docs clean
 	. .venv/bin/activate; $(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html

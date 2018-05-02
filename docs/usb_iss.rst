@@ -1,6 +1,11 @@
 usb\_iss package
 ================
 
+.. automodule:: usb_iss
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Submodules
 ----------
 
@@ -53,10 +58,3 @@ usb\_iss.usb\_iss module
     :show-inheritance:
 
 
-Module contents
----------------
-
-.. automodule:: usb_iss
-    :members:
-    :undoc-members:
-    :show-inheritance:

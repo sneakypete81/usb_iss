@@ -20,7 +20,7 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../src'))
 
 import usb_iss  # noqa: E402
 
@@ -47,9 +47,12 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'usb_iss'
+project = u'USB-ISS'
 # copyright = u"2018 Insert name here"
-author = u"Pete Burgers"
+author = u'Pete Burgers'
+
+html_show_copyright = False
+html_show_sourcelink = False
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -90,8 +93,24 @@ html_theme = 'alabaster'
 # theme further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    'description': 'Python library for the USB-ISS module',
+    'fixed_sidebar': True,
+    'github_user': 'sneakypete81',
+    'github_repo': 'usb_iss',
+    'github_type': 'watch',
+    'github_count': False,
+}
 
+html_sidebars = {
+    '**': [
+        'about.html',
+        'navigation.html',
+        'relations.html',
+        'searchbox.html',
+        'donate.html',
+    ]
+}
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
