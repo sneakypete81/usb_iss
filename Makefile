@@ -26,6 +26,8 @@ export PRINT_HELP_PYSCRIPT
 
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
+VENV = . .venv/bin/activate;
+
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
@@ -55,38 +57,42 @@ clean-test: ## remove test and coverage artifacts
 
 venv: ## set up a virtualenv for development
 	test -d .venv || virtualenv .venv
-	. .venv/bin/activate; pip install -Ur requirements_dev.txt
+	$(VENV) pip install -Ur requirements_dev.txt
 
 develop: venv ## install into a virtualenv
-	. .venv/bin/activate; pip install -e .
+	$(VENV) pip install -e .
 
 lint: ## check style with flake8
-	. .venv/bin/activate; flake8 src tests
+	$(VENV) flake8 src tests
 
 test: ## run tests quickly with the default Python
-	. .venv/bin/activate; nosetests
+	$(VENV) nosetests
 
 test-all: ## run tests on every Python version with tox
-	. .venv/bin/activate; tox
+	$(VENV) tox
 
 coverage: ## check code coverage quickly with the default Python
-	. .venv/bin/activate; coverage run --source usb_iss .venv/bin/nosetests
-	. .venv/bin/activate; coverage report -m
-	. .venv/bin/activate; coverage html
+	$(VENV) coverage run --source usb_iss .venv/bin/nosetests
+	$(VENV) coverage report -m
+	$(VENV) coverage html
 	$(BROWSER) htmlcov/index.html
 
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/usb_iss.rst
 	rm -f docs/modules.rst
-	. .venv/bin/activate; sphinx-apidoc --module-first -o docs/ src
-	. .venv/bin/activate; $(MAKE) -C docs clean
-	. .venv/bin/activate; $(MAKE) -C docs html
+
+	# Generate API documentation input
+	$(VENV) sphinx-apidoc --module-first -o docs/ src
+
+	# Generate HTML documentation
+	$(VENV) $(MAKE) -C docs clean
+	$(VENV) $(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
 
 release: dist ## package and upload a release
-	. .venv/bin/activate; twine upload dist/*
+	$(VENV) twine upload dist/*
 
 dist: clean venv ## builds source and wheel package
-	. .venv/bin/activate; python setup.py sdist
-	. .venv/bin/activate; python setup.py bdist_wheel
+	$(VENV) python setup.py sdist
+	$(VENV) python setup.py bdist_wheel
 	ls -l dist
