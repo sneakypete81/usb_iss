@@ -28,6 +28,8 @@ BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
 VENV = . .venv/bin/activate;
 
+API_EXCLUDE := src/usb_iss/usb_iss.py src/usb_iss/driver.py
+
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
@@ -82,7 +84,7 @@ docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/modules.rst
 
 	# Generate API documentation input
-	$(VENV) sphinx-apidoc --no-toc --module-first -o docs/ src
+	$(VENV) sphinx-apidoc --no-toc --module-first -o docs/ src $(API_EXCLUDE)
 
 	# Generate HTML documentation
 	$(VENV) $(MAKE) -C docs clean

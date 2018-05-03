@@ -17,14 +17,6 @@ usb\_iss.defs module
     :undoc-members:
     :show-inheritance:
 
-usb\_iss.driver module
-----------------------
-
-.. automodule:: usb_iss.driver
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 usb\_iss.exceptions module
 --------------------------
 
@@ -45,14 +37,6 @@ usb\_iss.io module
 ------------------
 
 .. automodule:: usb_iss.io
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-usb\_iss.usb\_iss module
-------------------------
-
-.. automodule:: usb_iss.usb_iss
     :members:
     :undoc-members:
     :show-inheritance:
