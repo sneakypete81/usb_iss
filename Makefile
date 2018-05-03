@@ -82,7 +82,7 @@ docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/modules.rst
 
 	# Generate API documentation input
-	$(VENV) sphinx-apidoc --module-first -o docs/ src
+	$(VENV) sphinx-apidoc --no-toc --module-first -o docs/ src
 
 	# Generate HTML documentation
 	$(VENV) $(MAKE) -C docs clean
