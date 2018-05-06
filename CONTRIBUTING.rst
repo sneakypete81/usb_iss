@@ -63,8 +63,9 @@ Ready to contribute? Here's how to set up `usb_iss` for local development.
 2. Clone your fork locally::
 
     $ git clone git@github.com:your_name_here/usb_iss.git
+    $ cd usb_iss
 
-3. Install your local copy into a virtualenv and activate it::
+3. Install your local clone (plus developer dependencies) into a virtualenv and activate it::
 
     $ pip install virtualenv
     $ make develop
