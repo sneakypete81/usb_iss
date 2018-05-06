@@ -17,6 +17,7 @@ from usb_iss.driver import Driver
 if isinstance(bytes(), str):
     bytes = bytearray
 
+#@TODO: Check for out of range data contents (0-255)
 
 @patch('serial.Serial')
 class TestDriver(unittest.TestCase):

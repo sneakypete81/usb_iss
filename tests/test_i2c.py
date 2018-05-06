@@ -18,6 +18,7 @@ from usb_iss import UsbIssError
 if isinstance(bytes(), str):
     bytes = bytearray
 
+#@TODO: Check for out of range address/data (0-255) 
 
 class TestI2C(unittest.TestCase):
     def setUp(self):
