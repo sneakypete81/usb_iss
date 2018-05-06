@@ -6,25 +6,26 @@ I2C_RD = 0x01
 
 class I2C(object):
     """
-    USe the USB_ISS module to perform I2C accesses.
+    Use the USB_ISS module to perform I2C accesses.
 
-    Example::
+    Example:
+        ::
 
-        from usb_iss import UsbIss, defs
+            from usb_iss import UsbIss, defs
 
-        # Configure I2C mode
+            # Configure I2C mode
 
-        iss = UsbIss()
-        iss.open("COM3")
-        iss.setup_i2c()
+            iss = UsbIss()
+            iss.open("COM3")
+            iss.setup_i2c()
 
-        # Write and read back some data
+            # Write and read back some data
 
-        iss.i2c.write(0xC4, 0, [0, 1, 2]);
-        data = iss.i2c.read(0xC4, 0, 3)
+            iss.i2c.write(0xC4, 0, [0, 1, 2]);
+            data = iss.i2c.read(0xC4, 0, 3)
 
-        print(data)
-        # [0, 1, 2]
+            print(data)
+            # [0, 1, 2]
     """
     def __init__(self, drv):
         self._drv = drv
@@ -35,11 +36,11 @@ class I2C(object):
         address. The majority of devices will be written to using this method.
         This is an alias for the write_ad1 method.
 
-        Params:
-            address: (integer) I2C address of the device.
-            register: (integer) Internal register address to write
+        Args:
+            address (int): I2C address of the device.
+            register (int): Internal register address to write
                 (0x00 - 0xFF).
-            data: (list(integer)) List of bytes to write to the device.
+            data (list of int): List of bytes to write to the device.
         """
         self.write_ad1(address, register, data)
 
@@ -49,12 +50,12 @@ class I2C(object):
         address. The majority of devices will be read from using this method.
         This is an alias for the read_ad1 method.
 
-        Params:
-            address: (integer) I2C address of the device.
-            register: (integer) internal register address to read (0x00 - 0xFF).
-            byte_count: (integer) Number of bytes to read.
-        Returns: (list(integer))
-            List of bytes read from the device.
+        Args:
+            address (int): I2C address of the device.
+            register (int): internal register address to read (0x00 - 0xFF).
+            byte_count (int): Number of bytes to read.
+        Returns:
+            list of int: List of bytes read from the device.
         """
         return self.read_ad1(address, register, byte_count)
 
@@ -62,9 +63,9 @@ class I2C(object):
         """
         Write a single byte to an I2C device.
 
-        Params:
-            address: (integer) I2C address of the device.
-            data_byte: (integer) Data byte to write to the device.
+        Args:
+            address (int): I2C address of the device.
+            data_byte (int): Data byte to write to the device.
         """
         address = address & ~I2C_RD
         self._drv.write_cmd(defs.I2C_SGL, [address, data_byte])
@@ -74,10 +75,10 @@ class I2C(object):
         """
         Read a single byte from an I2C device.
 
-        Params:
-            address: (integer) I2C address of the device.
-        Returns: (integer)
-            data byte read from the device.
+        Args:
+            address (int): I2C address of the device.
+        Returns:
+            int: Data byte read from the device.
         """
         address = address | I2C_RD
         self._drv.write_cmd(defs.I2C_SGL, [address])
@@ -88,9 +89,9 @@ class I2C(object):
         Write multiple bytes to a device without internal register addressing,
         or where the internal register address does not require resetting.
 
-        Params:
-            address: (integer) I2C address of the device.
-            data: (list(integer)) List of bytes to write to the device.
+        Args:
+            address (int): I2C address of the device.
+            data (list of int): List of bytes to write to the device.
         """
         address = address & ~I2C_RD
         self._drv.write_cmd(defs.I2C_AD0, [address, len(data)] + data)
@@ -101,11 +102,11 @@ class I2C(object):
         Read multiple bytes from a device without internal register addressing,
         or where the internal register address does not require resetting.
 
-        Params:
-            address: (integer) I2C address of the devie.
-            byte_count: (integer) Number of bytes to read.
-        Returns: (list(integer))
-            List of bytes read from the device.
+        Args:
+            address (int): I2C address of the devie.
+            byte_count (int): Number of bytes to read.
+        Returns:
+            list of int: List of bytes read from the device.
         """
         address = address | I2C_RD
         self._drv.write_cmd(defs.I2C_AD0, [address, byte_count])
@@ -114,13 +115,12 @@ class I2C(object):
     def write_ad1(self, address, register, data):
         """
         Write multiple bytes to a device with a one-byte internal register
-        address. The majority of devices will be written to using this method.
+        address.
 
-        Params:
-            address: (integer) I2C address of the device.
-            register: (integer) Internal register address to write
-                (0x00 - 0xFF).
-            data: (list(integer)) List of bytes to write to the device.
+        Args:
+            address (int): I2C address of the device.
+            register (int): Internal register address to write (0x00 - 0xFF).
+            data (list of int): List of bytes to write to the device.
         """
         if len(data) > defs.I2C_AD1_MAX_WRITE_BYTE_COUNT:
             raise UsbIssError(
@@ -134,14 +134,14 @@ class I2C(object):
     def read_ad1(self, address, register, byte_count):
         """
         Read multiple bytes from a device with a one-byte internal register
-        address. The majority of devices will be read from using this method.
+        address.
 
-        Params:
-            address: (integer) I2C address of the device.
-            register: (integer) internal register address to read (0x00 - 0xFF).
-            byte_count: (integer) Number of bytes to read.
-        Returns: (list(integer))
-            List of bytes read from the device.
+        Args:
+            address (int): I2C address of the device.
+            register (int): internal register address to read (0x00 - 0xFF).
+            byte_count (int): Number of bytes to read.
+        Returns:
+            list of int: List of bytes read from the device.
         """
         if byte_count > defs.I2C_AD1_MAX_READ_BYTE_COUNT:
             raise UsbIssError(
@@ -156,11 +156,11 @@ class I2C(object):
         Write multiple bytes to a device with a two-byte internal register
         address.
 
-        Params:
-            address: (integer) I2C address of the device.
-            register: (integer) Internal register address to write
+        Args:
+            address (int): I2C address of the device.
+            register (int): Internal register address to write
                 (0x0000 - 0xFFFF).
-            data: (list(integer)) List of bytes to write to the device.
+            data (list of int): List of bytes to write to the device.
         """
         if len(data) > defs.I2C_AD2_MAX_WRITE_BYTE_COUNT:
             raise UsbIssError(
@@ -178,13 +178,13 @@ class I2C(object):
         Read multiple bytes from a device with a two-byte internal register
         address.
 
-        Params:
-            address: (integer) I2C address of the device.
-            register: (integer) internal register address to read
+        Args:
+            address (int): I2C address of the device.
+            register (int): internal register address to read
                 (0x0000 - 0xFFFF).
-            byte_count: (integer) Number of bytes to read.
-        Returns: (list(integer))
-            List of bytes read from the device.
+            byte_count (int): Number of bytes to read.
+        Returns:
+            list of int: List of bytes read from the device.
         """
         if byte_count > defs.I2C_AD2_MAX_READ_BYTE_COUNT:
             raise UsbIssError(
@@ -203,21 +203,22 @@ class I2C(object):
         See https://www.robot-electronics.co.uk/htm/usb_iss_i2c_tech.htm for a
         full set of examples.
 
-        Params:
-            data: (list(integer)) List of commands from defs.I2C_DIRECT_*.
-        Returns: (list(integer))
-            List of bytes read from the device.
+        Args:
+            data (list of int): List of commands from defs.I2C_DIRECT_*.
+        Returns:
+            list of int: List of bytes read from the device.
 
-        Example::
+        Example:
+            ::
 
-            # Equivalent to iss.i2c.write_single(0x40, 0x55)
-            iss.i2c.direct([
-                defs.I2C_DIRECT_START,
-                defs.I2C_DIRECT_WRITE2,
-                0x40,
-                0x55,
-                defs.I2C_DIRECT_STOP,
-            ]);
+                # Equivalent to iss.i2c.write_single(0x40, 0x55)
+                iss.i2c.direct([
+                    defs.I2C_DIRECT_START,
+                    defs.I2C_DIRECT_WRITE2,
+                    0x40,
+                    0x55,
+                    defs.I2C_DIRECT_STOP,
+                ]);
 
         """
         self._drv.write_cmd(defs.I2C_DIRECT, data)
@@ -228,13 +229,13 @@ class I2C(object):
 
     def test(self, address):
         """
-        Check whether a device responds to the specified I2C addresss.
+        Check whether a device responds at the specified I2C addresss.
 
-        Params:
-            address: (integer) I2C address of the device.
+        Args:
+            address (int): I2C address of the device.
 
-        Returns: (boolean)
-            True if the device responds with an ACK.
+        Returns:
+            bool: True if the device responds with an ACK.
         """
         self._drv.write_cmd(defs.I2C_TEST, [address])
         return self._drv.read(1) != [defs.I2C_TEST_NO_DEVICE]

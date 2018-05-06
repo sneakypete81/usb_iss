@@ -14,11 +14,13 @@ class IO(object):
         pins that have been configured as digital outputs. Digital or analogue
         inputs or pins that are used for I2C or serial are not affected.
 
-        Params:
-            io0: (integer) IO0 output level (0 to drive low, 1 to drive high).
-            io1: (integer) IO1 output level (0 to drive low, 1 to drive high).
-            io2: (integer) IO2 output level (0 to drive low, 1 to drive high).
-            io3: (integer) IO3 output level (0 to drive low, 1 to drive high).
+        For each argument, set to 0 to drive low and 1 to drive high.
+
+        Args:
+            io0 (int): IO0 output value.
+            io1 (int): IO1 output value.
+            io2 (int): IO2 output value.
+            io3 (int): IO3 output value.
         """
         data = (((io0 & 0x01) << 0) +
                 ((io1 & 0x01) << 1) +
@@ -31,8 +33,9 @@ class IO(object):
         """
         Get the current state of all digital IO pins.
 
-        Returns: (list(integer)):
-            List containing the current state of the four digital IO pins.
+        Returns:
+            list of int: List containing the current state of the four digital
+            IO pins.
         """
         self._drv.write_cmd(defs.IO_GET_PINS)
         data = self._drv.read(1)[0]
@@ -48,14 +51,11 @@ class IO(object):
         This uses a 10-bit ADC, so the result is between 0-1023 for the voltage
         swing between VSS and VCC.
 
-        If you try to convert a channel which is not set up an an analogue input,
-        the result will be 0x0000.
+        Args:
+            pin (int): Input pin to sample.
 
-        Params:
-            pin: (integer) Input pin to sample.
-
-        Returns: (integer)
-            Sample value returned by the ADC (0-1023).
+        Returns:
+            int: Sample value returned by the ADC (0-1023).
         """
         self._drv.write_cmd(defs.IO_GET_AD, [pin])
         data = self._drv.read(2)
