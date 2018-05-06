@@ -39,7 +39,7 @@ Usage Example
 
     iss = UsbIss()
     iss.open("COM3")
-    iss.setup_i2c(defs.ISS_MODE_I2C_H_100KHZ)
+    iss.setup_i2c()
 
     # Write and read back some data
 

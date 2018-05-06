@@ -21,7 +21,7 @@ class UsbIss(object):
 
         iss = UsbIss()
         iss.open("COM3")
-        iss.setup_i2c(defs.ISS_MODE_I2C_H_100KHZ)
+        iss.setup_i2c()
 
         # Write and read back some data
 
@@ -58,21 +58,43 @@ class UsbIss(object):
     def change_io(self):
         raise NotImplementedError
 
-    def setup_i2c(self, i2c_mode,
+    def setup_i2c(self, clock_khz=400, use_i2c_hardware=True,
                   io1_type=defs.IO_TYPE_IO1_DIGITAL_INPUT,
                   io2_type=defs.IO_TYPE_IO2_DIGITAL_INPUT):
         """
         Issue a ISS_MODE command to set the operating mode to I2C.
 
         Params:
-            i2c_mode (integer) - I2C option from defs.ISS_MODE_I2C_*.
-            io1_type (integer) - IO option from defs.IO_TYPE_IO1_*
+            clock_khz: (integer) I2C clock rate in kHz.
+                See https://www.robot-electronics.co.uk/htm/usb_iss_tech.htm for
+                a list of valid values.
+            use_i2c_hardware: (boolean) Use the USB_ISS module's hardware I2C
+                controller.
+            io1_type: (integer) IO option from defs.IO_TYPE_IO1_*
                 (default: IO_TYPE_IO1_DIGITAL_INPUT).
-            io2_type (integer) - IO option from defs.IO_TYPE_IO2_*
+            io2_type: (integer) IO option from defs.IO_TYPE_IO2_*
                 (default: IO_TYPE_IO2_DIGITAL_INPUT).
         """
         assert io1_type in defs.IO1_TYPES
         assert io2_type in defs.IO2_TYPES
+
+        if clock_khz == 20:
+            assert not use_i2c_hardware
+            i2c_mode = defs.ISS_MODE_I2C_S_20KHZ
+        elif clock_khz == 50:
+            assert not use_i2c_hardware
+            i2c_mode = defs.ISS_MODE_I2C_S_50KHZ
+        elif clock_khz == 100:
+            i2c_mode = (defs.ISS_MODE_I2C_H_100KHZ if use_i2c_hardware else
+                        defs.ISS_MODE_I2C_S_100KHZ)
+        elif clock_khz == 400:
+            i2c_mode = (defs.ISS_MODE_I2C_H_400KHZ if use_i2c_hardware else
+                        defs.ISS_MODE_I2C_S_400KHZ)
+        elif clock_khz == 1000:
+            assert use_i2c_hardware
+            i2c_mode = defs.ISS_MODE_I2C_H_1000KHZ
+        else:
+            raise UsbIssError("Invalid clk_khz value")
 
         io_type = io1_type | io2_type
         data = [defs.USB_ISS_ISS_MODE, i2c_mode, io_type]

@@ -6,7 +6,7 @@ except ImportError:
     from mock import Mock, patch
 
 from hamcrest import assert_that, is_, calling, raises
-from matchmock import called, called_once_with
+from matchmock import called, called_with, called_once_with
 
 from usb_iss import UsbIss, UsbIssError, defs
 
@@ -31,22 +31,43 @@ class TestUSbIss(unittest.TestCase):
 
     def test_setup_i2c(self):
         self.serial.read.return_value = bytes([0xFF, 0x00])
+        test_matrix = [
+            (20, False, 0x20),
+            (50, False, 0x30),
+            (100, False, 0x40),
+            (400, False, 0x50),
+            (100, True, 0x60),
+            (400, True, 0x70),
+            (1000, True, 0x80),
+        ]
 
-        self.usb_iss.setup_i2c(
-            i2c_mode=defs.ISS_MODE_I2C_H_100KHZ,
-            io1_type=defs.IO_TYPE_IO1_OUTPUT_LOW,
-            io2_type=defs.IO_TYPE_IO2_OUTPUT_HIGH,
-        )
+        for (clk_khz, use_i2c_hardware, i2c_mode) in test_matrix:
+            self.usb_iss.setup_i2c(
+                clock_khz=clk_khz,
+                use_i2c_hardware=use_i2c_hardware,
+                io1_type=defs.IO_TYPE_IO1_OUTPUT_LOW,
+                io2_type=defs.IO_TYPE_IO2_OUTPUT_HIGH,
+            )
 
-        assert_that(self.serial.write, called_once_with(
-            bytes([0x5A, 0x02, 0x60, 0x04])))
+            assert_that(self.serial.write, called_with(
+                bytes([0x5A, 0x02, i2c_mode, 0x04])))
+
+    def test_setup_i2c_default_values(self):
+        self.serial.read.return_value = bytes([0xFF, 0x00])
+        self.usb_iss.setup_i2c();
+
+        assert_that(self.serial.write, called_with(
+            bytes([0x5A, 0x02, defs.ISS_MODE_I2C_H_400KHZ,
+                   defs.IO_TYPE_IO1_DIGITAL_INPUT |
+                   defs.IO_TYPE_IO2_DIGITAL_INPUT])))
 
     def test_setup_i2c_failure(self):
         self.serial.read.return_value = bytes([0x00, 0x05])
 
         assert_that(
             calling(self.usb_iss.setup_i2c).with_args(
-                i2c_mode=defs.ISS_MODE_I2C_H_100KHZ,
+                clock_khz=100,
+                use_i2c_hardware=True,
                 io1_type=defs.IO_TYPE_IO1_OUTPUT_LOW,
                 io2_type=defs.IO_TYPE_IO2_OUTPUT_HIGH),
             raises(UsbIssError, r"Received \[0x00, 0x05\] instead of ACK"))
