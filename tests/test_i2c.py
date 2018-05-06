@@ -27,6 +27,72 @@ class TestI2C(unittest.TestCase):
         driver._serial = self.serial
         self.i2c = I2C(driver)
 
+
+    def test_write(self):
+        self.serial.read.return_value = bytes([0xFF])
+
+        self.i2c.write(0xE0, 0x00, [0x51])
+
+        assert_that(
+            self.serial.write,
+            called_once_with(bytes([0x55, 0xE0, 0x00, 0x01, 0x51])))
+
+    def test_write_failure(self):
+        self.serial.read.return_value = bytes([0x00])
+
+        assert_that(
+            calling(self.i2c.write).with_args(0xE0, 0x00, [0x51]),
+            raises(UsbIssError, "Received NACK instead of ACK"))
+
+    def test_write_large_data(self):
+        self.serial.read.return_value = bytes([0xFF])
+        expected_data = list(range(60))
+
+        self.i2c.write(0xE0, 0x00, expected_data)
+
+        assert_that(self.serial.write, called_once_with(bytes(
+            [0x55, 0xE0, 0x00, 60] + expected_data)))
+
+    def test_write_overflow_failure(self):
+        self.serial.read.return_value = bytes([0xFF])
+        expected_data = list(range(61))
+
+        assert_that(
+            calling(self.i2c.write).with_args(0xE0, 0x00, expected_data),
+            raises(UsbIssError, "Attempted to write 61 bytes, maximum is 60"))
+
+    def test_read(self):
+        self.serial.read.return_value = bytes([0x11, 0x22])
+
+        data = self.i2c.read(0xC1, 0x02, 2)
+
+        assert_that(self.serial.write, called_once_with(
+            bytes([0x55, 0xC1, 0x02, 2])))
+        assert_that(data, is_([0x11, 0x22]))
+
+    def test_read_failure(self):
+        self.serial.read.return_value = bytes([0x11])
+
+        assert_that(
+            calling(self.i2c.read).with_args(0xC1, 0x02, 2),
+            raises(UsbIssError, "Expected 2 bytes, but 1 received"))
+
+    def test_read_large_data(self):
+        expected_data = list(range(60))
+        self.serial.read.return_value = bytes(expected_data)
+
+        data = self.i2c.read(0xC1, 0x02, 60)
+
+        assert_that(self.serial.write, called_once_with(
+            bytes([0x55, 0xC1, 0x02, 60])))
+        assert_that(data, is_(expected_data))
+
+    def test_read_overflow_failure(self):
+
+        assert_that(
+            calling(self.i2c.read).with_args(0xC1, 0x02, 61),
+            raises(UsbIssError, "Attempted to read 61 bytes, maximum is 60"))
+
     def test_write_single(self):
         self.serial.read.return_value = bytes([0xFF])
 

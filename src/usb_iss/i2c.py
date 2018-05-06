@@ -20,14 +20,43 @@ class I2C(object):
 
         # Write and read back some data
 
-        iss.i2c.write_ad1(0xC4, 0, [0, 1, 2]);
-        data = iss.i2c.read_ad1(0xC4, 0, 3)
+        iss.i2c.write(0xC4, 0, [0, 1, 2]);
+        data = iss.i2c.read(0xC4, 0, 3)
 
         print(data)
         # [0, 1, 2]
     """
     def __init__(self, drv):
         self._drv = drv
+
+    def write(self, address, register, data):
+        """
+        Write multiple bytes to a device with a one-byte internal register
+        address. The majority of devices will be written to using this method.
+        This is an alias for the write_ad1 method.
+
+        Params:
+            address: (integer) I2C address of the device.
+            register: (integer) Internal register address to write
+                (0x00 - 0xFF).
+            data: (list(integer)) List of bytes to write to the device.
+        """
+        self.write_ad1(address, register, data)
+
+    def read(self, address, register, byte_count):
+        """
+        Read multiple bytes from a device with a one-byte internal register
+        address. The majority of devices will be read from using this method.
+        This is an alias for the read_ad1 method.
+
+        Params:
+            address: (integer) I2C address of the device.
+            register: (integer) internal register address to read (0x00 - 0xFF).
+            byte_count: (integer) Number of bytes to read.
+        Returns: (list(integer))
+            List of bytes read from the device.
+        """
+        return self.read_ad1(address, register, byte_count)
 
     def write_single(self, address, data_byte):
         """

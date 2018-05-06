@@ -25,8 +25,8 @@ class UsbIss(object):
 
         # Write and read back some data
 
-        iss.i2c.write_ad1(0xC4, 0, [0, 1, 2]);
-        data = iss.i2c.read_ad1(0xC4, 0, 3)
+        iss.i2c.write(0xC4, 0, [0, 1, 2]);
+        data = iss.i2c.read(0xC4, 0, 3)
 
         print(data)
         # [0, 1, 2]
