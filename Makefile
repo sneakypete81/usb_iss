@@ -68,7 +68,7 @@ lint: ## check style with flake8
 	$(VENV) flake8 src tests
 
 test: ## run tests quickly with the default Python
-	$(VENV) nosetests
+	$(VENV) nosetests --exe
 
 test-all: ## run tests on every Python version with tox
 	$(VENV) tox
