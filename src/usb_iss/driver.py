@@ -20,6 +20,9 @@ SERIAL_OPTS = {
 
 
 class Driver(object):
+    """
+    Internal serial port driver. Don't use this class directly.
+    """
     def __init__(self):
         self._serial = None
 
@@ -71,6 +74,9 @@ class Driver(object):
 
 
 class DummyDriver(object):
+    """
+    Dummy Driver object, used for testing.
+    """
     def open(self, _):
         return self
 
