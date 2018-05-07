@@ -10,6 +10,10 @@ USB-ISS Python Library
     :target: https://travis-ci.org/sneakypete81/usb_iss
     :alt: TravisCI
 
+.. image:: https://readthedocs.org/projects/usb-iss/badge/?version=latest
+    :target: https://usb-iss.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
 .. image:: https://pyup.io/repos/github/sneakypete81/usb_iss/shield.svg
     :target: https://pyup.io/repos/github/sneakypete81/usb_iss/
     :alt: Updates
@@ -19,13 +23,17 @@ Python library for the USB-ISS module.
 .. image:: https://www.robot-electronics.co.uk/images/usb-iss-300.png
     :alt: USB ISS Module
 
-See https://www.robot-electronics.co.uk/htm/usb_iss_tech.htm for the full USB ISS module documentation
+**USB ISS module documentation:**
+  https://www.robot-electronics.co.uk/htm/usb_iss_tech.htm
+
+**Python API documentation:**
+  https://usb-iss.readthedocs.io/en/latest/
 
 Features
 --------
 
 * I2C Mode
-* IO Mode (not yet implemented)
+* IO Mode (untested)
 * SPI Mode (not yet implemented)
 * Serial Mode (not yet implemented)
 
