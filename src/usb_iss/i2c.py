@@ -52,7 +52,7 @@ class I2C(object):
 
         Args:
             address (int): I2C address of the device.
-            register (int): internal register address to read (0x00 - 0xFF).
+            register (int): Internal register address to read (0x00 - 0xFF).
             byte_count (int): Number of bytes to read.
         Returns:
             list of int: List of bytes read from the device.
@@ -138,7 +138,7 @@ class I2C(object):
 
         Args:
             address (int): I2C address of the device.
-            register (int): internal register address to read (0x00 - 0xFF).
+            register (int): Internal register address to read (0x00 - 0xFF).
             byte_count (int): Number of bytes to read.
         Returns:
             list of int: List of bytes read from the device.
@@ -180,7 +180,7 @@ class I2C(object):
 
         Args:
             address (int): I2C address of the device.
-            register (int): internal register address to read
+            register (int): Internal register address to read
                 (0x0000 - 0xFFFF).
             byte_count (int): Number of bytes to read.
         Returns:
