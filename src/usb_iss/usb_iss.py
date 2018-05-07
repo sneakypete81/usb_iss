@@ -1,4 +1,5 @@
 from . import defs
+from .exceptions import UsbIssError
 from .driver import Driver, DummyDriver
 from .i2c import I2C
 from .io import IO
