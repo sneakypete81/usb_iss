@@ -47,7 +47,8 @@ class UsbIss(object):
 
     def open(self, port):
         """
-        Open the specified serial port for communication with the USB_ISS module.
+        Open the specified serial port for communication with the USB_ISS
+        module.
 
         Args:
             port (str): Serial port to use for usb_iss communication.

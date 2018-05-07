@@ -18,7 +18,7 @@ from usb_iss.driver import Driver
 if isinstance(bytes(), str):
     bytes = bytearray
 
-#@TODO: Check for pin values >1
+# @TODO: Check for pin values >1
 
 
 class TestIO(unittest.TestCase):

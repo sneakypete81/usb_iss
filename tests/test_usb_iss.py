@@ -54,7 +54,7 @@ class TestUSbIss(unittest.TestCase):
 
     def test_setup_i2c_default_values(self):
         self.serial.read.return_value = bytes([0xFF, 0x00])
-        self.usb_iss.setup_i2c();
+        self.usb_iss.setup_i2c()
 
         assert_that(self.serial.write, called_with(
             bytes([0x5A, 0x02, defs.ISS_MODE_I2C_H_400KHZ,
