@@ -56,20 +56,20 @@ class Driver(object):
     def check_i2c_ack(self):
         """For I2C, any non-zero code means ACK"""
         data = self.read(1)
-        if data[0] == defs.USB_ISS_NACK:
+        if data[0] == defs.ResponseCode.NACK.value:
             raise UsbIssError("Received NACK instead of ACK")
 
     def check_ack(self):
         data = self.read(1)
-        if data[0] != defs.USB_ISS_ACK:
+        if data[0] != defs.ResponseCode.ACK.value:
             raise UsbIssError("Received 0x%02X instead of ACK" % data[0])
 
-    def check_ack_error_code(self):
+    def check_ack_error_code(self, error_enum):
         data = self.read(2)
-        if data[0] != defs.USB_ISS_ACK:
+        if data[0] != defs.ResponseCode.ACK.value:
             raise UsbIssError(
-                "Received [0x%02X, 0x%02X] instead of ACK"
-                % (data[0], data[1]))
+                "Received %s [0x%02X, 0x%02X] instead of ACK"
+                % (error_enum(data[1]), data[0], data[1]))
         return data[1]
 
 
@@ -95,5 +95,5 @@ class DummyDriver(object):
     def check_ack(self):
         pass
 
-    def check_ack_error_code(self):
+    def check_ack_error_code(self, error_enum):
         return 0

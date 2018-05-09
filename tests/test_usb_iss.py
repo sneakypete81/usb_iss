@@ -45,8 +45,8 @@ class TestUSbIss(unittest.TestCase):
             self.usb_iss.setup_i2c(
                 clock_khz=clk_khz,
                 use_i2c_hardware=use_i2c_hardware,
-                io1_type=defs.IO_TYPE_IO1_OUTPUT_LOW,
-                io2_type=defs.IO_TYPE_IO2_OUTPUT_HIGH,
+                io1_type=defs.IOType.OUTPUT_LOW,
+                io2_type=defs.IOType.OUTPUT_HIGH,
             )
 
             assert_that(self.serial.write, called_with(
@@ -57,9 +57,9 @@ class TestUSbIss(unittest.TestCase):
         self.usb_iss.setup_i2c()
 
         assert_that(self.serial.write, called_with(
-            bytes([0x5A, 0x02, defs.ISS_MODE_I2C_H_400KHZ,
-                   defs.IO_TYPE_IO1_DIGITAL_INPUT |
-                   defs.IO_TYPE_IO2_DIGITAL_INPUT])))
+            bytes([0x5A, 0x02, defs.Mode.I2C_H_400KHZ.value,
+                   defs.IOType.DIGITAL_INPUT.value << 2 |
+                   defs.IOType.DIGITAL_INPUT.value])))
 
     def test_setup_i2c_failure(self):
         self.serial.read.return_value = bytes([0x00, 0x05])
@@ -68,9 +68,10 @@ class TestUSbIss(unittest.TestCase):
             calling(self.usb_iss.setup_i2c).with_args(
                 clock_khz=100,
                 use_i2c_hardware=True,
-                io1_type=defs.IO_TYPE_IO1_OUTPUT_LOW,
-                io2_type=defs.IO_TYPE_IO2_OUTPUT_HIGH),
-            raises(UsbIssError, r"Received \[0x00, 0x05\] instead of ACK"))
+                io1_type=defs.IOType.OUTPUT_LOW,
+                io2_type=defs.IOType.OUTPUT_HIGH),
+            raises(UsbIssError, (r"Received ModeError.UNKNOWN_COMMAND " +
+                                 r"\[0x00, 0x05\] instead of ACK")))
 
     def test_read_module_id(self):
         self.serial.read.return_value = bytes([0x07, 0x02, 0x40])
@@ -93,7 +94,7 @@ class TestUSbIss(unittest.TestCase):
 
         result = self.usb_iss.read_iss_mode()
 
-        assert_that(result, is_(0x40))
+        assert_that(result, is_(defs.Mode.I2C_S_100KHZ))
         assert_that(self.serial.write, called_once_with(bytes([0x5A, 0x01])))
 
     def test_read_serial_number(self):

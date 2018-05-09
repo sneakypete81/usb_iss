@@ -8,7 +8,7 @@ except ImportError:
 from hamcrest import assert_that, is_, calling, raises
 from matchmock import called, called_once, called_once_with
 
-from usb_iss import UsbIssError
+from usb_iss import defs, UsbIssError
 from usb_iss.driver import Driver
 
 # In Py2, bytes means str, and there's no immutable byte array defined.
@@ -108,14 +108,15 @@ class TestDriver(unittest.TestCase):
         driver = Driver().open('PORTNAME')
         serial().read.return_value = bytes([0xFF, 0x9A])
 
-        result = driver.check_ack_error_code()
+        result = driver.check_ack_error_code(defs.ModeError)
 
         assert_that(result, is_(0x9A))
 
     def test_check_ack_error_code_failing(self, serial):
         driver = Driver().open('PORTNAME')
-        serial().read.return_value = bytes([0x00, 0x2F])
+        serial().read.return_value = bytes([0x00, 0x05])
 
         assert_that(
-            calling(driver.check_ack_error_code),
-            raises(UsbIssError, r"Received \[0x00, 0x2F\] instead of ACK"))
+            calling(driver.check_ack_error_code).with_args(defs.ModeError),
+            raises(UsbIssError, (r"Received ModeError.UNKNOWN_COMMAND " +
+                                 r"\[0x00, 0x05\] instead of ACK")))

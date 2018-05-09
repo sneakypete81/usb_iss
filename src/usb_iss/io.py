@@ -26,7 +26,7 @@ class IO(object):
                 ((io1 & 0x01) << 1) +
                 ((io2 & 0x01) << 2) +
                 ((io3 & 0x01) << 3))
-        self._drv.write_cmd(defs.IO_SET_PINS, [data])
+        self._drv.write_cmd(defs.IOCommand.SET_PINS.value, [data])
         self._drv.check_ack()
 
     def get_pins(self):
@@ -35,9 +35,9 @@ class IO(object):
 
         Returns:
             list of int: List containing the current state of the four digital
-            IO pins.
+            IO pins (0 = low, 1 = high).
         """
-        self._drv.write_cmd(defs.IO_GET_PINS)
+        self._drv.write_cmd(defs.IOCommand.GET_PINS.value)
         data = self._drv.read(1)[0]
         return [(data >> 0) & 0x01,
                 (data >> 1) & 0x01,
@@ -57,6 +57,6 @@ class IO(object):
         Returns:
             int: Sample value returned by the ADC (0-1023).
         """
-        self._drv.write_cmd(defs.IO_GET_AD, [pin])
+        self._drv.write_cmd(defs.IOCommand.GET_AD.value, [pin])
         data = self._drv.read(2)
         return (data[0] << 8) + data[1]

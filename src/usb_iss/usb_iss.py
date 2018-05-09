@@ -35,8 +35,8 @@ class UsbIss(object):
             # [0, 1, 2]
 
     Attributes:
-        i2c (:class:`usb_iss.i2c.I2C`): Attribute to use for I2C access.
-        io (:class:`usb_iss.i2c.IO`): Attribute to use for pin IO access.
+        i2c (:class:`i2c.I2C`): Attribute to use for I2C access.
+        io (:class:`io.IO`): Attribute to use for pin IO access.
 
     """
     def __init__(self, dummy=False):
@@ -63,8 +63,8 @@ class UsbIss(object):
         self._drv.close()
 
     def setup_i2c(self, clock_khz=400, use_i2c_hardware=True,
-                  io1_type=defs.IO_TYPE_IO1_DIGITAL_INPUT,
-                  io2_type=defs.IO_TYPE_IO2_DIGITAL_INPUT):
+                  io1_type=defs.IOType.DIGITAL_INPUT,
+                  io2_type=defs.IOType.DIGITAL_INPUT):
         """
         Issue a ISS_MODE command to set the operating mode to I2C.
 
@@ -74,36 +74,33 @@ class UsbIss(object):
                 for a list of valid values.
             use_i2c_hardware (bool): Use the USB_ISS module's hardware I2C
                 controller.
-            io1_type (int): IO option from :mod:`~usb_iss.defs`.IO_TYPE_IO1_*
-                (default: IO_TYPE_IO1_DIGITAL_INPUT).
-            io2_type (int): IO option from :mod:`~usb_iss.defs`.IO_TYPE_IO2_*
-                (default: IO_TYPE_IO2_DIGITAL_INPUT).
+            io1_type (defs.IOType): IO1 mode
+                (default: DIGITAL_INPUT).
+            io2_type (defs.IOType): IO2 mode
+                (default: DIGITAL_INPUT).
         """
-        assert io1_type in defs.IO1_TYPES
-        assert io2_type in defs.IO2_TYPES
-
         if clock_khz == 20:
             assert not use_i2c_hardware
-            i2c_mode = defs.ISS_MODE_I2C_S_20KHZ
+            i2c_mode = defs.Mode.I2C_S_20KHZ.value
         elif clock_khz == 50:
             assert not use_i2c_hardware
-            i2c_mode = defs.ISS_MODE_I2C_S_50KHZ
+            i2c_mode = defs.Mode.I2C_S_50KHZ.value
         elif clock_khz == 100:
-            i2c_mode = (defs.ISS_MODE_I2C_H_100KHZ if use_i2c_hardware else
-                        defs.ISS_MODE_I2C_S_100KHZ)
+            i2c_mode = (defs.Mode.I2C_H_100KHZ.value if use_i2c_hardware else
+                        defs.Mode.I2C_S_100KHZ.value)
         elif clock_khz == 400:
-            i2c_mode = (defs.ISS_MODE_I2C_H_400KHZ if use_i2c_hardware else
-                        defs.ISS_MODE_I2C_S_400KHZ)
+            i2c_mode = (defs.Mode.I2C_H_400KHZ.value if use_i2c_hardware else
+                        defs.Mode.I2C_S_400KHZ.value)
         elif clock_khz == 1000:
             assert use_i2c_hardware
-            i2c_mode = defs.ISS_MODE_I2C_H_1000KHZ
+            i2c_mode = defs.Mode.I2C_H_1000KHZ.value
         else:
             raise UsbIssError("Invalid clk_khz value")
 
-        io_type = io1_type | io2_type
-        data = [defs.USB_ISS_ISS_MODE, i2c_mode, io_type]
+        io_type = io1_type.value | (io2_type.value << 2)
+        data = [defs.SubCommand.ISS_MODE.value, i2c_mode, io_type]
         self._drv.write_cmd(defs.CMD_USB_ISS, data)
-        self._drv.check_ack_error_code()
+        self._drv.check_ack_error_code(defs.ModeError)
 
     def setup_i2c_serial(self):
         raise NotImplementedError
@@ -125,7 +122,8 @@ class UsbIss(object):
         Returns:
             int: The USB_ISS module ID (always 7).
         """
-        self._drv.write_cmd(defs.CMD_USB_ISS, [defs.USB_ISS_ISS_VERSION])
+        self._drv.write_cmd(defs.CMD_USB_ISS,
+                            [defs.SubCommand.ISS_VERSION.value])
         return self._drv.read(3)[0]
 
     def read_fw_version(self):
@@ -133,22 +131,24 @@ class UsbIss(object):
         Returns:
             int: The USB_ISS firmware version.
         """
-        self._drv.write_cmd(defs.CMD_USB_ISS, [defs.USB_ISS_ISS_VERSION])
+        self._drv.write_cmd(defs.CMD_USB_ISS,
+                            [defs.SubCommand.ISS_VERSION.value])
         return self._drv.read(3)[1]
 
     def read_iss_mode(self):
         """
         Returns:
-            int: The current ISS_MODE operating mode.
-            See :mod:`~usb_iss.defs`.ISS_MODE_*.
+            defs.Mode: The current ISS_MODE operating mode.
         """
-        self._drv.write_cmd(defs.CMD_USB_ISS, [defs.USB_ISS_ISS_VERSION])
-        return self._drv.read(3)[2]
+        self._drv.write_cmd(defs.CMD_USB_ISS,
+                            [defs.SubCommand.ISS_VERSION.value])
+        return defs.Mode(self._drv.read(3)[2])
 
     def read_serial_number(self):
         """
         Returns:
             str: The serial number of the attached USB_ISS module.
         """
-        self._drv.write_cmd(defs.CMD_USB_ISS, [defs.USB_ISS_GET_SER_NUM])
+        self._drv.write_cmd(defs.CMD_USB_ISS,
+                            [defs.SubCommand.GET_SER_NUM.value])
         return bytes(self._drv.read(8)).decode('ascii')

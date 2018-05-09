@@ -292,14 +292,14 @@ class TestI2C(unittest.TestCase):
             ]
 
         data = self.i2c.direct([
-            defs.I2C_DIRECT_START,
-            defs.I2C_DIRECT_WRITE3,
+            defs.I2CDirect.START,
+            defs.I2CDirect.WRITE3,
             0xA0, 0x00, 0x00,
-            defs.I2C_DIRECT_RESTART,
-            defs.I2C_DIRECT_WRITE1,
+            defs.I2CDirect.RESTART,
+            defs.I2CDirect.WRITE1,
             0xA1,
-            defs.I2C_DIRECT_READ4,
-            defs.I2C_DIRECT_STOP,
+            defs.I2CDirect.READ4,
+            defs.I2CDirect.STOP,
             ])
 
         assert_that(self.serial.write, called_once_with(
@@ -312,16 +312,17 @@ class TestI2C(unittest.TestCase):
 
         assert_that(
             calling(self.i2c.direct).with_args([
-                defs.I2C_DIRECT_START,
-                defs.I2C_DIRECT_WRITE3,
+                defs.I2CDirect.START,
+                defs.I2CDirect.WRITE3,
                 0xA0, 0x00, 0x00,
-                defs.I2C_DIRECT_RESTART,
-                defs.I2C_DIRECT_WRITE1,
+                defs.I2CDirect.RESTART,
+                defs.I2CDirect.WRITE1,
                 0xA1,
-                defs.I2C_DIRECT_READ4,
-                defs.I2C_DIRECT_STOP,
+                defs.I2CDirect.READ4,
+                defs.I2CDirect.STOP,
                 ]),
-            raises(UsbIssError, r"Received \[0x00, 0x01\] instead of ACK"))
+            raises(UsbIssError, (r"Received I2CDirectError.DEVICE_ERROR " +
+                                 r"\[0x00, 0x01\] instead of ACK")))
 
     def test_test_with_device(self):
         self.serial.read.return_value = bytes([0xFF])
