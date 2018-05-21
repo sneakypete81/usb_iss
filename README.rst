@@ -27,7 +27,7 @@ Python library for the USB-ISS module.
   https://www.robot-electronics.co.uk/htm/usb_iss_tech.htm
 
 **Python API documentation:**
-  https://usb-iss.readthedocs.io/en/latest/
+  https://usb-iss.readthedocs.io
 
 Features
 --------
