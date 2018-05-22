@@ -75,9 +75,7 @@ class UsbIss(object):
             use_i2c_hardware (bool): Use the USB_ISS module's hardware I2C
                 controller.
             io1_type (defs.IOType): IO1 mode
-                (default: DIGITAL_INPUT).
             io2_type (defs.IOType): IO2 mode
-                (default: DIGITAL_INPUT).
         """
         i2c_mode = self._get_i2c_mode(clock_khz, use_i2c_hardware)
         io_type = self._get_io_type(io1_type, io2_type,
@@ -114,13 +112,9 @@ class UsbIss(object):
 
         Args:
             io1_type (defs.IOType): IO1 mode
-                (default: DIGITAL_INPUT).
             io2_type (defs.IOType): IO2 mode
-                (default: DIGITAL_INPUT).
             io3_type (defs.IOType): IO3 mode
-                (default: DIGITAL_INPUT).
             io4_type (defs.IOType): IO4 mode
-                (default: DIGITAL_INPUT).
         """
         io_type = self._get_io_type(io1_type, io2_type, io3_type, io4_type)
         self._set_mode(defs.Mode.IO_MODE.value, [io_type])
@@ -136,13 +130,9 @@ class UsbIss(object):
 
         Args:
             io1_type (defs.IOType): IO1 mode
-                (default: DIGITAL_INPUT).
             io2_type (defs.IOType): IO2 mode
-                (default: DIGITAL_INPUT).
             io3_type (defs.IOType): IO3 mode
-                (default: DIGITAL_INPUT).
             io4_type (defs.IOType): IO4 mode
-                (default: DIGITAL_INPUT).
         """
         io_type = self._get_io_type(io1_type, io2_type, io3_type, io4_type)
         self._set_mode(defs.Mode.IO_CHANGE.value, [io_type])
@@ -156,9 +146,7 @@ class UsbIss(object):
         Args:
             baud_rate (int): Baud rate for the serial interface.
             io3_type (defs.IOType): IO3 mode
-                (default: DIGITAL_INPUT).
             io4_type (defs.IOType): IO4 mode
-                (default: DIGITAL_INPUT).
         """
         divisor = self._get_serial_divisor(baud_rate)
         io_type = self._get_io_type(defs.IOType.NULL, defs.IOType.NULL,
