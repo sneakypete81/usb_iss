@@ -125,8 +125,27 @@ class UsbIss(object):
         io_type = self._get_io_type(io1_type, io2_type, io3_type, io4_type)
         self._set_mode(defs.Mode.IO_MODE.value, [io_type])
 
-    def change_io(self):
-        raise NotImplementedError
+    def change_io(self,
+                  io1_type=defs.IOType.DIGITAL_INPUT,
+                  io2_type=defs.IOType.DIGITAL_INPUT,
+                  io3_type=defs.IOType.DIGITAL_INPUT,
+                  io4_type=defs.IOType.DIGITAL_INPUT):
+        """
+        Issue a ISS_MODE command to change the current IO mode without
+        affecting serial or I2C settings.
+
+        Args:
+            io1_type (defs.IOType): IO1 mode
+                (default: DIGITAL_INPUT).
+            io2_type (defs.IOType): IO2 mode
+                (default: DIGITAL_INPUT).
+            io3_type (defs.IOType): IO3 mode
+                (default: DIGITAL_INPUT).
+            io4_type (defs.IOType): IO4 mode
+                (default: DIGITAL_INPUT).
+        """
+        io_type = self._get_io_type(io1_type, io2_type, io3_type, io4_type)
+        self._set_mode(defs.Mode.IO_CHANGE.value, [io_type])
 
     def setup_serial(self, baud_rate=9600,
                      io3_type=defs.IOType.DIGITAL_INPUT,

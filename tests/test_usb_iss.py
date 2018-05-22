@@ -154,6 +154,36 @@ class TestUSbIss(unittest.TestCase):
             raises(UsbIssError, (r"Received ModeError.UNKNOWN_COMMAND " +
                                  r"\[0x00, 0x05\] instead of ACK")))
 
+    def test_change_io(self):
+        self.serial.read.return_value = bytes([0xFF, 0x00])
+        self.usb_iss.change_io(
+            io1_type=defs.IOType.OUTPUT_LOW,
+            io2_type=defs.IOType.OUTPUT_HIGH,
+            io3_type=defs.IOType.ANALOGUE_INPUT,
+            io4_type=defs.IOType.DIGITAL_INPUT)
+
+        assert_that(self.serial.write, called_with(
+            bytes([0x5A, 0x02, 0x10, 0xB4])))
+
+    def test_change_io_default_values(self):
+        self.serial.read.return_value = bytes([0xFF, 0x00])
+        self.usb_iss.change_io()
+
+        assert_that(self.serial.write, called_with(
+            bytes([0x5A, 0x02, 0x10,
+                   defs.IOType.DIGITAL_INPUT.value << 6 |
+                   defs.IOType.DIGITAL_INPUT.value << 4 |
+                   defs.IOType.DIGITAL_INPUT.value << 2 |
+                   defs.IOType.DIGITAL_INPUT.value])))
+
+    def test_change_io_failure(self):
+        self.serial.read.return_value = bytes([0x00, 0x05])
+
+        assert_that(
+            calling(self.usb_iss.change_io),
+            raises(UsbIssError, (r"Received ModeError.UNKNOWN_COMMAND " +
+                                 r"\[0x00, 0x05\] instead of ACK")))
+
     def test_setup_io_serial(self):
         self.serial.read.return_value = bytes([0xFF, 0x00])
         test_matrix = [
