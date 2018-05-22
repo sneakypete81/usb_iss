@@ -99,8 +99,17 @@ class UsbIss(object):
         divisor = self._get_serial_divisor(baud_rate)
         self._set_mode(i2c_mode | defs.Mode.SERIAL.value, divisor)
 
-    def setup_spi(self):
-        raise NotImplementedError
+    def setup_spi(self, spi_mode=defs.SPIMode.TX_ACTIVE_TO_IDLE_IDLE_LOW,
+                  clock_khz=500):
+        """
+        Issue a ISS_MODE command to set the operating mode to SPI.
+
+        Args:
+            spi_mode (defs.SPIMode): SPI mode option to use.
+            clock_khz (int): SPI clock rate in kHz.
+        """
+        divisor = self._get_spi_divisor(clock_khz)
+        self._set_mode(spi_mode.value, [divisor])
 
     def setup_io(self,
                  io1_type=defs.IOType.DIGITAL_INPUT,
@@ -226,3 +235,10 @@ class UsbIss(object):
         divisor = max(divisor, 0)
         divisor = min(divisor, 0xFFFF)
         return [divisor >> 8, divisor & 0xFF]
+
+    @staticmethod
+    def _get_spi_divisor(clock_khz):
+        divisor = (6000 // clock_khz) - 1
+        divisor = max(divisor, 0)
+        divisor = min(divisor, 0xFF)
+        return divisor

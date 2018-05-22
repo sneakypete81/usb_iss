@@ -132,6 +132,44 @@ class TestUSbIss(unittest.TestCase):
             raises(UsbIssError, (r"Received ModeError.UNKNOWN_COMMAND " +
                                  r"\[0x00, 0x05\] instead of ACK")))
 
+    def test_setup_spi(self):
+        self.serial.read.return_value = bytes([0xFF, 0x00])
+        test_matrix = [
+            (3000, 1),
+            (500, 11),
+            (23, 255),
+        ]
+
+        for (clk_khz, divisor) in test_matrix:
+            self.usb_iss.setup_spi(
+                spi_mode=defs.SPIMode.TX_IDLE_TO_ACTIVE_IDLE_HIGH,
+                clock_khz=clk_khz)
+
+            assert_that(self.serial.write, called_with(
+                bytes([0x5A, 0x02, 0x93, divisor])))
+
+    def test_setup_spi_default_values(self):
+        self.serial.read.return_value = bytes([0xFF, 0x00])
+        self.usb_iss.setup_spi()
+
+        assert_that(self.serial.write, called_with(
+            bytes([0x5A, 0x02, 0x90, 11])))
+
+    def test_setup_spi_overflow(self):
+        self.serial.read.return_value = bytes([0xFF, 0x00])
+        self.usb_iss.setup_spi(clock_khz=1)
+
+        assert_that(self.serial.write, called_with(
+            bytes([0x5A, 0x02, 0x90, 0xFF])))
+
+    def test_setup_spi_failure(self):
+        self.serial.read.return_value = bytes([0x00, 0x05])
+
+        assert_that(
+            calling(self.usb_iss.setup_spi),
+            raises(UsbIssError, (r"Received ModeError.UNKNOWN_COMMAND " +
+                                 r"\[0x00, 0x05\] instead of ACK")))
+
     def test_setup_io(self):
         self.serial.read.return_value = bytes([0xFF, 0x00])
         self.usb_iss.setup_io(
