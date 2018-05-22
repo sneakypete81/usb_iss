@@ -68,6 +68,62 @@ class TestUSbIss(unittest.TestCase):
             raises(UsbIssError, (r"Received ModeError.UNKNOWN_COMMAND " +
                                  r"\[0x00, 0x05\] instead of ACK")))
 
+    def test_setup_i2c_serial(self):
+        self.serial.read.return_value = bytes([0xFF, 0x00])
+        test_matrix = [
+            (20, False, 0x21),
+            (50, False, 0x31),
+            (100, False, 0x41),
+            (400, False, 0x51),
+            (100, True, 0x61),
+            (400, True, 0x71),
+            (1000, True, 0x81),
+        ]
+
+        for (clk_khz, use_i2c_hardware, i2c_mode) in test_matrix:
+            self.usb_iss.setup_i2c_serial(
+                clock_khz=clk_khz,
+                use_i2c_hardware=use_i2c_hardware)
+
+            assert_that(self.serial.write, called_with(
+                bytes([0x5A, 0x02, i2c_mode, 0x01, 0x37])))
+
+    def test_setup_i2c_serial_baud_rates(self):
+        self.serial.read.return_value = bytes([0xFF, 0x00])
+        test_matrix = [
+            (300, [0x27, 0x0F]),
+            (1200, [0x09, 0xC3]),
+            (2400, [0x04, 0xE1]),
+            (9600, [0x01, 0x37]),
+            (19200, [0x00, 0x9B]),
+            (38400, [0x00, 0x4D]),
+            (57600, [0x00, 0x33]),
+            (115200, [0x00, 0x19]),
+        ]
+
+        for (baud_rate, divisor) in test_matrix:
+            self.usb_iss.setup_i2c_serial(baud_rate=baud_rate)
+
+            assert_that(self.serial.write, called_with(
+                bytes([0x5A, 0x02, defs.Mode.I2C_H_400KHZ.value | 0x01] +
+                      divisor)))
+
+    def test_setup_i2c_serial_default_values(self):
+        self.serial.read.return_value = bytes([0xFF, 0x00])
+        self.usb_iss.setup_i2c_serial()
+
+        assert_that(self.serial.write, called_with(
+            bytes([0x5A, 0x02, defs.Mode.I2C_H_400KHZ.value | 0x01,
+                   0x01, 0x37])))
+
+    def test_setup_i2c_serial_failure(self):
+        self.serial.read.return_value = bytes([0x00, 0x05])
+
+        assert_that(
+            calling(self.usb_iss.setup_i2c_serial),
+            raises(UsbIssError, (r"Received ModeError.UNKNOWN_COMMAND " +
+                                 r"\[0x00, 0x05\] instead of ACK")))
+
     def test_setup_io(self):
         self.serial.read.return_value = bytes([0xFF, 0x00])
         self.usb_iss.setup_io(
@@ -95,6 +151,42 @@ class TestUSbIss(unittest.TestCase):
 
         assert_that(
             calling(self.usb_iss.setup_io),
+            raises(UsbIssError, (r"Received ModeError.UNKNOWN_COMMAND " +
+                                 r"\[0x00, 0x05\] instead of ACK")))
+
+    def test_setup_io_serial(self):
+        self.serial.read.return_value = bytes([0xFF, 0x00])
+        test_matrix = [
+            (20, False, 0x21),
+            (50, False, 0x31),
+            (100, False, 0x41),
+            (400, False, 0x51),
+            (100, True, 0x61),
+            (400, True, 0x71),
+            (1000, True, 0x81),
+        ]
+
+        for (clk_khz, use_i2c_hardware, i2c_mode) in test_matrix:
+            self.usb_iss.setup_i2c_serial(
+                clock_khz=clk_khz,
+                use_i2c_hardware=use_i2c_hardware)
+
+            assert_that(self.serial.write, called_with(
+                bytes([0x5A, 0x02, i2c_mode, 0x01, 0x37])))
+
+    def test_setup_io_serial_default_values(self):
+        self.serial.read.return_value = bytes([0xFF, 0x00])
+        self.usb_iss.setup_i2c_serial()
+
+        assert_that(self.serial.write, called_with(
+            bytes([0x5A, 0x02, defs.Mode.I2C_H_400KHZ.value | 0x01,
+                   0x01, 0x37])))
+
+    def test_setup_io_serial_failure(self):
+        self.serial.read.return_value = bytes([0x00, 0x05])
+
+        assert_that(
+            calling(self.usb_iss.setup_i2c_serial),
             raises(UsbIssError, (r"Received ModeError.UNKNOWN_COMMAND " +
                                  r"\[0x00, 0x05\] instead of ACK")))
 

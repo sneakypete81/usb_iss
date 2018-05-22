@@ -84,8 +84,22 @@ class UsbIss(object):
                                     defs.IOType.NULL, defs.IOType.NULL)
         self._set_mode(i2c_mode, [io_type])
 
-    def setup_i2c_serial(self):
-        raise NotImplementedError
+    def setup_i2c_serial(self, clock_khz=400, use_i2c_hardware=True,
+                         baud_rate=9600):
+        """
+        Issue a ISS_MODE command to set the operating mode to I2C + Serial.
+
+        Args:
+            clock_khz (int): I2C clock rate in kHz.
+                See https://www.robot-electronics.co.uk/htm/usb_iss_tech.htm
+                for a list of valid values.
+            use_i2c_hardware (bool): Use the USB_ISS module's hardware I2C
+                controller.
+            baud_rate (int): Baud rate for the serial interface.
+        """
+        i2c_mode = self._get_i2c_mode(clock_khz, use_i2c_hardware)
+        divisor = self._get_serial_divisor(baud_rate)
+        self._set_mode(i2c_mode | defs.Mode.SERIAL.value, divisor)
 
     def setup_spi(self):
         raise NotImplementedError
@@ -114,8 +128,24 @@ class UsbIss(object):
     def change_io(self):
         raise NotImplementedError
 
-    def setup_serial(self):
-        raise NotImplementedError
+    def setup_serial(self, baud_rate=9600,
+                     io3_type=defs.IOType.DIGITAL_INPUT,
+                     io4_type=defs.IOType.DIGITAL_INPUT):
+        """
+        Issue a ISS_MODE command to set the operating mode to Serial + IO.
+
+        Args:
+            baud_rate (int): Baud rate for the serial interface.
+            io3_type (defs.IOType): IO3 mode
+                (default: DIGITAL_INPUT).
+            io4_type (defs.IOType): IO4 mode
+                (default: DIGITAL_INPUT).
+        """
+        divisor = self._get_serial_divisor(baud_rate)
+        io_type = self._get_io_type(defs.IOType.NULL, defs.IOType.NULL,
+                                    io3_type, io4_type)
+        self._set_mode(defs.Mode.IO.value | defs.Mode.SERIAL.value,
+                       divisor + [io_type])
 
     def read_module_id(self):
         """
@@ -182,3 +212,8 @@ class UsbIss(object):
             return defs.Mode.I2C_H_1000KHZ.value
 
         raise UsbIssError("Invalid clk_khz value")
+
+    @staticmethod
+    def _get_serial_divisor(baud_rate):
+        divisor = (48000000 // (16 * baud_rate)) - 1
+        return [(divisor >> 8) & 0xff, divisor & 0xFF]
