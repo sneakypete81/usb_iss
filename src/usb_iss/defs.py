@@ -42,11 +42,11 @@ class ModeError(Enum):
 
 
 class IOType(Enum):
-    NULL = 0x00
     OUTPUT_LOW = 0x00
     OUTPUT_HIGH = 0x01
     DIGITAL_INPUT = 0x02
     ANALOGUE_INPUT = 0x03
+    NULL = 0x00
 
 
 class SPIMode(Enum):
