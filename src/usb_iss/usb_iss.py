@@ -66,7 +66,7 @@ class UsbIss(object):
                   io1_type=defs.IOType.DIGITAL_INPUT,
                   io2_type=defs.IOType.DIGITAL_INPUT):
         """
-        Issue a ISS_MODE command to set the operating mode to I2C.
+        Issue a ISS_MODE command to set the operating mode to I2C + IO.
 
         Args:
             clock_khz (int): I2C clock rate in kHz.
@@ -103,9 +103,9 @@ class UsbIss(object):
                 (default: DIGITAL_INPUT).
             io2_type (defs.IOType): IO2 mode
                 (default: DIGITAL_INPUT).
-            io1_type (defs.IOType): IO3 mode
+            io3_type (defs.IOType): IO3 mode
                 (default: DIGITAL_INPUT).
-            io2_type (defs.IOType): IO4 mode
+            io4_type (defs.IOType): IO4 mode
                 (default: DIGITAL_INPUT).
         """
         io_type = self._get_io_type(io1_type, io2_type, io3_type, io4_type)
