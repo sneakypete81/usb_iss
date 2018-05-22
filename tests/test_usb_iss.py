@@ -46,8 +46,7 @@ class TestUSbIss(unittest.TestCase):
                 clock_khz=clk_khz,
                 use_i2c_hardware=use_i2c_hardware,
                 io1_type=defs.IOType.OUTPUT_LOW,
-                io2_type=defs.IOType.OUTPUT_HIGH,
-            )
+                io2_type=defs.IOType.OUTPUT_HIGH)
 
             assert_that(self.serial.write, called_with(
                 bytes([0x5A, 0x02, i2c_mode, 0x04])))
@@ -65,11 +64,37 @@ class TestUSbIss(unittest.TestCase):
         self.serial.read.return_value = bytes([0x00, 0x05])
 
         assert_that(
-            calling(self.usb_iss.setup_i2c).with_args(
-                clock_khz=100,
-                use_i2c_hardware=True,
-                io1_type=defs.IOType.OUTPUT_LOW,
-                io2_type=defs.IOType.OUTPUT_HIGH),
+            calling(self.usb_iss.setup_i2c),
+            raises(UsbIssError, (r"Received ModeError.UNKNOWN_COMMAND " +
+                                 r"\[0x00, 0x05\] instead of ACK")))
+
+    def test_setup_io(self):
+        self.serial.read.return_value = bytes([0xFF, 0x00])
+        self.usb_iss.setup_io(
+            io1_type=defs.IOType.OUTPUT_LOW,
+            io2_type=defs.IOType.OUTPUT_HIGH,
+            io3_type=defs.IOType.ANALOGUE_INPUT,
+            io4_type=defs.IOType.DIGITAL_INPUT)
+
+        assert_that(self.serial.write, called_with(
+            bytes([0x5A, 0x02, 0x00, 0xB4])))
+
+    def test_setup_io_default_values(self):
+        self.serial.read.return_value = bytes([0xFF, 0x00])
+        self.usb_iss.setup_io()
+
+        assert_that(self.serial.write, called_with(
+            bytes([0x5A, 0x02, 0x00,
+                   defs.IOType.DIGITAL_INPUT.value << 6 |
+                   defs.IOType.DIGITAL_INPUT.value << 4 |
+                   defs.IOType.DIGITAL_INPUT.value << 2 |
+                   defs.IOType.DIGITAL_INPUT.value])))
+
+    def test_setup_io_failure(self):
+        self.serial.read.return_value = bytes([0x00, 0x05])
+
+        assert_that(
+            calling(self.usb_iss.setup_io),
             raises(UsbIssError, (r"Received ModeError.UNKNOWN_COMMAND " +
                                  r"\[0x00, 0x05\] instead of ACK")))
 

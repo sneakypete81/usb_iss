@@ -42,6 +42,7 @@ class ModeError(Enum):
 
 
 class IOType(Enum):
+    NULL = 0x00
     OUTPUT_LOW = 0x00
     OUTPUT_HIGH = 0x01
     DIGITAL_INPUT = 0x02

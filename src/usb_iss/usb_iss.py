@@ -79,28 +79,10 @@ class UsbIss(object):
             io2_type (defs.IOType): IO2 mode
                 (default: DIGITAL_INPUT).
         """
-        if clock_khz == 20:
-            assert not use_i2c_hardware
-            i2c_mode = defs.Mode.I2C_S_20KHZ.value
-        elif clock_khz == 50:
-            assert not use_i2c_hardware
-            i2c_mode = defs.Mode.I2C_S_50KHZ.value
-        elif clock_khz == 100:
-            i2c_mode = (defs.Mode.I2C_H_100KHZ.value if use_i2c_hardware else
-                        defs.Mode.I2C_S_100KHZ.value)
-        elif clock_khz == 400:
-            i2c_mode = (defs.Mode.I2C_H_400KHZ.value if use_i2c_hardware else
-                        defs.Mode.I2C_S_400KHZ.value)
-        elif clock_khz == 1000:
-            assert use_i2c_hardware
-            i2c_mode = defs.Mode.I2C_H_1000KHZ.value
-        else:
-            raise UsbIssError("Invalid clk_khz value")
-
-        io_type = io1_type.value | (io2_type.value << 2)
-        data = [defs.SubCommand.ISS_MODE.value, i2c_mode, io_type]
-        self._drv.write_cmd(defs.CMD_USB_ISS, data)
-        self._drv.check_ack_error_code(defs.ModeError)
+        i2c_mode = self._get_i2c_mode(clock_khz, use_i2c_hardware)
+        io_type = self._get_io_type(io1_type, io2_type,
+                                    defs.IOType.NULL, defs.IOType.NULL)
+        self._set_mode(i2c_mode, [io_type])
 
     def setup_i2c_serial(self):
         raise NotImplementedError
@@ -108,8 +90,26 @@ class UsbIss(object):
     def setup_spi(self):
         raise NotImplementedError
 
-    def setup_io(self):
-        raise NotImplementedError
+    def setup_io(self,
+                 io1_type=defs.IOType.DIGITAL_INPUT,
+                 io2_type=defs.IOType.DIGITAL_INPUT,
+                 io3_type=defs.IOType.DIGITAL_INPUT,
+                 io4_type=defs.IOType.DIGITAL_INPUT):
+        """
+        Issue a ISS_MODE command to set the operating mode to IO.
+
+        Args:
+            io1_type (defs.IOType): IO1 mode
+                (default: DIGITAL_INPUT).
+            io2_type (defs.IOType): IO2 mode
+                (default: DIGITAL_INPUT).
+            io1_type (defs.IOType): IO3 mode
+                (default: DIGITAL_INPUT).
+            io2_type (defs.IOType): IO4 mode
+                (default: DIGITAL_INPUT).
+        """
+        io_type = self._get_io_type(io1_type, io2_type, io3_type, io4_type)
+        self._set_mode(defs.Mode.IO_MODE.value, [io_type])
 
     def change_io(self):
         raise NotImplementedError
@@ -152,3 +152,33 @@ class UsbIss(object):
         self._drv.write_cmd(defs.CMD_USB_ISS,
                             [defs.SubCommand.GET_SER_NUM.value])
         return bytes(self._drv.read(8)).decode('ascii')
+
+    def _set_mode(self, mode_value, data):
+        data = [defs.SubCommand.ISS_MODE.value, mode_value] + data
+        self._drv.write_cmd(defs.CMD_USB_ISS, data)
+        self._drv.check_ack_error_code(defs.ModeError)
+
+    @staticmethod
+    def _get_io_type(io1_type, io2_type, io3_type, io4_type):
+        return ((io1_type.value << 0) | (io2_type.value << 2) |
+                (io3_type.value << 4) | (io4_type.value << 6))
+
+    @staticmethod
+    def _get_i2c_mode(clock_khz, use_i2c_hardware):
+        if clock_khz == 20:
+            assert not use_i2c_hardware
+            return defs.Mode.I2C_S_20KHZ.value
+        if clock_khz == 50:
+            assert not use_i2c_hardware
+            return defs.Mode.I2C_S_50KHZ.value
+        if clock_khz == 100:
+            return (defs.Mode.I2C_H_100KHZ.value if use_i2c_hardware else
+                    defs.Mode.I2C_S_100KHZ.value)
+        if clock_khz == 400:
+            return (defs.Mode.I2C_H_400KHZ.value if use_i2c_hardware else
+                    defs.Mode.I2C_S_400KHZ.value)
+        if clock_khz == 1000:
+            assert use_i2c_hardware
+            return defs.Mode.I2C_H_1000KHZ.value
+
+        raise UsbIssError("Invalid clk_khz value")
