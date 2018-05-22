@@ -116,6 +116,14 @@ class TestUSbIss(unittest.TestCase):
             bytes([0x5A, 0x02, defs.Mode.I2C_H_400KHZ.value | 0x01,
                    0x01, 0x37])))
 
+    def test_setup_i2c_serial_overflow(self):
+        self.serial.read.return_value = bytes([0xFF, 0x00])
+        self.usb_iss.setup_i2c_serial(baud_rate=1)
+
+        assert_that(self.serial.write, called_with(
+            bytes([0x5A, 0x02, defs.Mode.I2C_H_400KHZ.value | 0x01,
+                   0xFF, 0xFF])))
+
     def test_setup_i2c_serial_failure(self):
         self.serial.read.return_value = bytes([0x00, 0x05])
 

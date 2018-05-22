@@ -235,4 +235,6 @@ class UsbIss(object):
     @staticmethod
     def _get_serial_divisor(baud_rate):
         divisor = (48000000 // (16 * baud_rate)) - 1
-        return [(divisor >> 8) & 0xff, divisor & 0xFF]
+        divisor = max(divisor, 0)
+        divisor = min(divisor, 0xFFFF)
+        return [divisor >> 8, divisor & 0xFF]
