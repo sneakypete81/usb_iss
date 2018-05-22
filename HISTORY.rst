@@ -2,7 +2,7 @@
 History
 =======
 
-0.2.2 (2018-05-22)
+0.2.3 (2018-05-22)
 ------------------
 
 * Fix and test Travis PyPI auto-deploy
