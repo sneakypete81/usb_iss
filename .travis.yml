@@ -30,4 +30,4 @@ deploy:
   on:
     tags: true
     repo: sneakypete81/usb_iss
-    condition: TOX_ENV = py36
+    condition: $TOX_ENV = py36
