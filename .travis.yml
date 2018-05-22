@@ -30,4 +30,4 @@ deploy:
   on:
     tags: true
     repo: sneakypete81/usb_iss
-    python: 3.6
+    condition: TOX_ENV=py36
