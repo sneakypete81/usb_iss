@@ -69,6 +69,23 @@ class TestUSbIss(unittest.TestCase):
         assert_that(self.driver.check_ack_error_code,
                     called_once_with(defs.ModeError))
 
+    def test_setup_i2c_invalid_clock_rate(self):
+        assert_that(calling(self.usb_iss.setup_i2c).
+                    with_args(clock_khz=942),
+                    raises(UsbIssError, "Invalid clk_khz value"))
+
+    def test_setup_i2c_invalid_hw_clock_rate(self):
+        assert_that(calling(self.usb_iss.setup_i2c).
+                    with_args(clock_khz=50, use_i2c_hardware=True),
+                    raises(AssertionError,
+                           "I2C HW mode doesn't support 50kHz"))
+
+    def test_setup_i2c_invalid_sw_clock_rate(self):
+        assert_that(calling(self.usb_iss.setup_i2c).
+                    with_args(clock_khz=1000, use_i2c_hardware=False),
+                    raises(AssertionError,
+                           "I2C SW mode doesn't support 1000kHz"))
+
     def test_setup_i2c_serial(self):
         test_matrix = [
             (20, False, 0x21),
