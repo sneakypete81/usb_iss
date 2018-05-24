@@ -6,7 +6,7 @@ except ImportError:
     from mock import patch
 
 from hamcrest import assert_that, is_, calling, raises
-from matchmock import called, called_once, called_once_with
+from matchmock import called, called_once, called_once_with, not_called
 
 from usb_iss import defs, UsbIssError
 from usb_iss.driver import Driver
@@ -74,6 +74,14 @@ class TestDriver(unittest.TestCase):
         data = driver.read(2)
 
         assert_that(data, is_([0x01, 0x02]))
+
+    def test_read_zero_bytes(self, serial):
+        driver = Driver().open('PORTNAME')
+
+        data = driver.read(0)
+
+        assert_that(data, is_([]))
+        assert_that(serial().read.not_called())
 
     def test_read_failure(self, serial):
         driver = Driver().open('PORTNAME')
