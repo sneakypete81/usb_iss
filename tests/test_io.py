@@ -10,50 +10,41 @@ from matchmock import called_once_with
 
 from usb_iss import UsbIssError
 from usb_iss.io import IO
-from usb_iss.driver import Driver
-
-# In Py2, bytes means str, and there's no immutable byte array defined.
-# Use bytearray instead - this is mutable, but otherwise equivalent to
-# Python3's bytes.
-if isinstance(bytes(), str):
-    bytes = bytearray
 
 # @TODO: Check for pin values >1
 
 
 class TestIO(unittest.TestCase):
     def setUp(self):
-        self.serial = Mock()
-        driver = Driver()
-        driver._serial = self.serial
-        self.io = IO(driver)
+        self.driver = Mock()
+        self.io = IO(self.driver)
 
     def test_set_pins(self):
-        self.serial.read.return_value = bytes([0xFF])
-
         self.io.set_pins(0, 1, 1, 1)
 
-        assert_that(self.serial.write, called_once_with(bytes([0x63, 0x0E])))
+        assert_that(self.driver.write_cmd, called_once_with(0x63, [0x0E]))
 
     def test_set_pins_failure(self):
-        self.serial.read.return_value = bytes([0x00])
+        self.driver.check_ack.side_effect = UsbIssError
 
         assert_that(
             calling(self.io.set_pins).with_args(0, 1, 1, 1),
-            raises(UsbIssError, "Received 0x00 instead of ACK"))
+            raises(UsbIssError))
 
     def test_get_pins(self):
-        self.serial.read.return_value = bytes([0x0E])
+        self.driver.read.return_value = [0x0E]
 
         data = self.io.get_pins()
 
-        assert_that(self.serial.write, called_once_with(bytes([0x64])))
+        assert_that(self.driver.write_cmd, called_once_with(0x64))
+        assert_that(self.driver.read, called_once_with(1))
         assert_that(data, is_([0, 1, 1, 1]))
 
     def test_get_ad(self):
-        self.serial.read.return_value = bytes([0x02, 0xA6])
+        self.driver.read.return_value = [0x02, 0xA6]
 
         data = self.io.get_ad(1)
 
-        assert_that(self.serial.write, called_once_with(bytes([0x65, 1])))
+        assert_that(self.driver.write_cmd, called_once_with(0x65, [1]))
+        assert_that(self.driver.read, called_once_with(2))
         assert_that(data, is_(0x02A6))
