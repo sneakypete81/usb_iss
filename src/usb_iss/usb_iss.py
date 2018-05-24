@@ -4,12 +4,6 @@ from .driver import Driver, DummyDriver
 from .i2c import I2C
 from .io import IO
 
-# In Py2, bytes means str, and there's no immutable byte array defined.
-# Use bytearray instead - this is mutable, but otherwise equivalent to
-# Python3's bytes.
-if isinstance(bytes(), str):
-    bytes = bytearray
-
 
 class UsbIss(object):
     """
@@ -197,7 +191,8 @@ class UsbIss(object):
         """
         self._drv.write_cmd(defs.CMD_USB_ISS,
                             [defs.SubCommand.GET_SER_NUM.value])
-        return bytes(self._drv.read(8)).decode('ascii')
+        data = self._drv.read(8)
+        return ''.join([chr(byte) for byte in data])
 
     def _set_mode(self, mode_value, data):
         data = [defs.SubCommand.ISS_MODE.value, mode_value] + data
