@@ -154,8 +154,7 @@ class UsbIss(object):
         divisor = self._get_serial_divisor(baud_rate)
         io_type = self._get_io_type(defs.IOType.NULL, defs.IOType.NULL,
                                     io3_type, io4_type)
-        self._set_mode(defs.Mode.IO.value | defs.Mode.SERIAL.value,
-                       divisor + [io_type])
+        self._set_mode(defs.Mode.SERIAL.value, divisor + [io_type])
 
     def read_module_id(self):
         """

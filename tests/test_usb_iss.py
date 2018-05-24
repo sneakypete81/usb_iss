@@ -225,39 +225,39 @@ class TestUSbIss(unittest.TestCase):
         assert_that(self.driver.check_ack_error_code,
                     called_once_with(defs.ModeError))
 
-    def test_setup_io_serial(self):
+    def test_setup_serial_baud_rates(self):
         test_matrix = [
-            (20, False, 0x21),
-            (50, False, 0x31),
-            (100, False, 0x41),
-            (400, False, 0x51),
-            (100, True, 0x61),
-            (400, True, 0x71),
-            (1000, True, 0x81),
+            (300, [0x27, 0x0F]),
+            (1200, [0x09, 0xC3]),
+            (2400, [0x04, 0xE1]),
+            (9600, [0x01, 0x37]),
+            (19200, [0x00, 0x9B]),
+            (38400, [0x00, 0x4D]),
+            (57600, [0x00, 0x33]),
+            (115200, [0x00, 0x19]),
         ]
 
-        for (clk_khz, use_i2c_hardware, i2c_mode) in test_matrix:
-            self.usb_iss.setup_i2c_serial(
-                clock_khz=clk_khz,
-                use_i2c_hardware=use_i2c_hardware)
+        for (baud_rate, divisor) in test_matrix:
+            self.usb_iss.setup_serial(baud_rate=baud_rate,
+                                      io3_type=defs.IOType.OUTPUT_LOW,
+                                      io4_type=defs.IOType.OUTPUT_HIGH)
 
             assert_that(self.driver.write_cmd,
-                        called_with(0x5A, [0x02, i2c_mode, 0x01, 0x37]))
+                        called_with(0x5A, [0x02, 0x01] + divisor + [0x40]))
 
-    def test_setup_io_serial_default_values(self):
-        self.usb_iss.setup_i2c_serial()
+    def test_setup_serial_default_values(self):
+        self.usb_iss.setup_serial()
 
         assert_that(self.driver.write_cmd,
-                    called_once_with(0x5A, [
-                        0x02,
-                        defs.Mode.I2C_H_400KHZ.value | 0x01,
-                        0x01,
-                        0x37]))
+                    called_once_with(0x5A,
+                                     [0x02, 0x01, 0x01, 0x37,
+                                      defs.IOType.DIGITAL_INPUT.value << 6 |
+                                      defs.IOType.DIGITAL_INPUT.value << 4]))
 
-    def test_setup_io_serial_failure(self):
+    def test_setup_serial_failure(self):
         self.driver.check_ack_error_code.side_effect = UsbIssError
 
-        assert_that(calling(self.usb_iss.setup_i2c_serial),
+        assert_that(calling(self.usb_iss.setup_serial),
                     raises(UsbIssError))
         assert_that(self.driver.check_ack_error_code,
                     called_once_with(defs.ModeError))
