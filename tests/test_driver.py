@@ -17,7 +17,6 @@ from usb_iss.driver import Driver
 if isinstance(bytes(), str):
     bytes = bytearray
 
-# @TODO: Check for out of range data contents (0-255)
 
 
 @patch('serial.Serial')
@@ -66,6 +65,20 @@ class TestDriver(unittest.TestCase):
         assert_that(
             calling(driver.write_cmd).with_args(0x99),
             raises(UsbIssError, "Serial port has not been opened"))
+
+    def test_write_cmd_fails_with_out_of_range_command(self, _):
+        driver = Driver().open('PORTNAME')
+
+        assert_that(
+            calling(driver.write_cmd).with_args(0x100),
+            raises(ValueError))
+
+    def test_write_cmd_fails_with_out_of_range_data(self, _):
+        driver = Driver().open('PORTNAME')
+
+        assert_that(
+            calling(driver.write_cmd).with_args(0x10, [0x100]),
+            raises(ValueError))
 
     def test_read(self, serial):
         driver = Driver().open('PORTNAME')
