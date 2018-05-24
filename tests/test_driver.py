@@ -6,7 +6,7 @@ except ImportError:
     from mock import patch
 
 from hamcrest import assert_that, is_, calling, raises
-from matchmock import called, called_once, called_once_with, not_called
+from matchmock import called, called_once, called_once_with
 
 from usb_iss import defs, UsbIssError
 from usb_iss.driver import Driver
