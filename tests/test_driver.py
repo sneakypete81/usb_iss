@@ -18,7 +18,6 @@ if isinstance(bytes(), str):
     bytes = bytearray
 
 
-
 @patch('serial.Serial')
 class TestDriver(unittest.TestCase):
     def test_open(self, serial):
