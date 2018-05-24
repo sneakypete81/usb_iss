@@ -11,7 +11,6 @@ from matchmock import called_with, called_once, called_once_with
 from usb_iss import UsbIss, UsbIssError, defs
 
 
-
 class TestUSbIss(unittest.TestCase):
     def setUp(self):
         self.usb_iss = UsbIss()
