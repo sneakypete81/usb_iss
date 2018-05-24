@@ -74,7 +74,7 @@ test-all: ## run tests on every Python version with tox
 	$(VENV) tox
 
 coverage: ## check code coverage quickly with the default Python
-	$(VENV) coverage run --source usb_iss .venv/bin/nosetests
+	$(VENV) coverage run --branch --source usb_iss .venv/bin/nosetests
 	$(VENV) coverage report -m
 	$(VENV) coverage html
 	$(BROWSER) htmlcov/index.html
