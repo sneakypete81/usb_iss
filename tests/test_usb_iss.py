@@ -6,7 +6,7 @@ except ImportError:
     from mock import Mock
 
 from hamcrest import assert_that, is_, calling, raises
-from matchmock import called_with, called_once_with
+from matchmock import called_with, called_once, called_once_with
 
 from usb_iss import UsbIss, UsbIssError, defs
 
@@ -22,6 +22,13 @@ class TestUSbIss(unittest.TestCase):
         self.usb_iss.open('PORTNAME')
 
         assert_that(self.driver.open, called_once_with('PORTNAME'))
+
+    def test_close(self):
+        self.usb_iss.open('PORTNAME')
+
+        self.usb_iss.close()
+
+        assert_that(self.driver.close, called_once())
 
     def test_setup_i2c(self):
         test_matrix = [
