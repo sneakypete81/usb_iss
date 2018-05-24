@@ -1,4 +1,5 @@
 from . import defs
+from .exceptions import UsbIssError
 
 
 class IO(object):
@@ -22,6 +23,7 @@ class IO(object):
             io2 (int): IO2 output value.
             io3 (int): IO3 output value.
         """
+        self._check_pin_values_in_range([io0, io1, io2, io3])
         data = (((io0 & 0x01) << 0) +
                 ((io1 & 0x01) << 1) +
                 ((io2 & 0x01) << 2) +
@@ -60,3 +62,9 @@ class IO(object):
         self._drv.write_cmd(defs.IOCommand.GET_AD.value, [pin])
         data = self._drv.read(2)
         return (data[0] << 8) + data[1]
+
+    @staticmethod
+    def _check_pin_values_in_range(pins):
+        for pin in pins:
+            if pin not in [0, 1]:
+                raise UsbIssError("Pin values must be 0 or 1")
