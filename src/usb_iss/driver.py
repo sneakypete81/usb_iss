@@ -6,7 +6,7 @@ from . import defs
 # In Py2, bytes means str, and there's no immutable byte array defined.
 # Use bytearray instead - this is mutable, but otherwise equivalent to
 # Python3's bytes.
-if isinstance(bytes(), str):
+if isinstance(bytes(), str):  # pragma: no cover
     bytes = bytearray
 
 SERIAL_OPTS = {
@@ -73,7 +73,7 @@ class Driver(object):
         return data[1]
 
 
-class DummyDriver(object):
+class DummyDriver(object):  # pragma: no cover
     """
     Dummy Driver object, used for testing.
     """
