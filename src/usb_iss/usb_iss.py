@@ -206,10 +206,10 @@ class UsbIss(object):
     @staticmethod
     def _get_i2c_mode(clock_khz, use_i2c_hardware):
         if clock_khz == 20:
-            assert not use_i2c_hardware
+            assert not use_i2c_hardware, "I2C HW mode doesn't support 20kHz"
             return defs.Mode.I2C_S_20KHZ.value
         if clock_khz == 50:
-            assert not use_i2c_hardware
+            assert not use_i2c_hardware, "I2C HW mode doesn't support 50kHz"
             return defs.Mode.I2C_S_50KHZ.value
         if clock_khz == 100:
             return (defs.Mode.I2C_H_100KHZ.value if use_i2c_hardware else
@@ -218,7 +218,7 @@ class UsbIss(object):
             return (defs.Mode.I2C_H_400KHZ.value if use_i2c_hardware else
                     defs.Mode.I2C_S_400KHZ.value)
         if clock_khz == 1000:
-            assert use_i2c_hardware
+            assert use_i2c_hardware, "I2C SW mode doesn't support 1000kHz"
             return defs.Mode.I2C_H_1000KHZ.value
 
         raise UsbIssError("Invalid clk_khz value")
