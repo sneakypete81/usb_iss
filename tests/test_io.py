@@ -11,8 +11,6 @@ from matchmock import called_once_with
 from usb_iss import UsbIssError
 from usb_iss.io import IO
 
-# @TODO: Check for pin values >1
-
 
 class TestIO(unittest.TestCase):
     def setUp(self):
@@ -23,6 +21,11 @@ class TestIO(unittest.TestCase):
         self.io.set_pins(0, 1, 1, 1)
 
         assert_that(self.driver.write_cmd, called_once_with(0x63, [0x0E]))
+
+    def test_set_pins_with_invalid_values(self):
+        assert_that(
+            calling(self.io.set_pins).with_args(0, 1, 1, 2),
+            raises(UsbIssError))
 
     def test_set_pins_failure(self):
         self.driver.check_ack.side_effect = UsbIssError
