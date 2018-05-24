@@ -110,6 +110,26 @@ class TestDriver(unittest.TestCase):
             calling(driver.read).with_args(2),
             raises(UsbIssError, "Serial port has not been opened"))
 
+    def test_check_i2c_ack_passing_with_0x01(self, serial):
+        driver = Driver().open('PORTNAME')
+        serial().read.return_value = bytes([0x01])
+
+        driver.check_i2c_ack()
+
+    def test_check_i2c_ack_passing_with_0xff(self, serial):
+        driver = Driver().open('PORTNAME')
+        serial().read.return_value = bytes([0xFF])
+
+        driver.check_i2c_ack()
+
+    def test_check_i2c_ack_failing(self, serial):
+        driver = Driver().open('PORTNAME')
+        serial().read.return_value = bytes([0x00])
+
+        assert_that(
+            calling(driver.check_i2c_ack),
+            raises(UsbIssError, "Received NACK instead of ACK"))
+
     def test_check_ack_passing(self, serial):
         driver = Driver().open('PORTNAME')
         serial().read.return_value = bytes([0xFF])
