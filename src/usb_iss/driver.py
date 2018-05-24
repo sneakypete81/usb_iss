@@ -47,6 +47,9 @@ class Driver(object):
         if self._serial is None:
             raise UsbIssError("Serial port has not been opened")
 
+        if byte_count == 0:
+            return []
+
         data = list(self._serial.read(byte_count))
         if len(data) != byte_count:
             raise UsbIssError(

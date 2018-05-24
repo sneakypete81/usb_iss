@@ -237,8 +237,6 @@ class I2C(object):
 
         self._drv.write_cmd(defs.I2CCommand.I2C_DIRECT.value, bytes)
         bytes_to_read = self._drv.check_ack_error_code(defs.I2CDirectError)
-        if bytes_to_read == 0:
-            return []
         return self._drv.read(bytes_to_read)
 
     def test(self, address):
