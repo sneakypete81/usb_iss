@@ -4,7 +4,7 @@ from .driver import Driver, DummyDriver
 from .i2c import I2C
 from .io import IO
 from .spi import SPI
-from .serial import Serial
+from .serial_ import Serial
 
 
 class UsbIss(object):

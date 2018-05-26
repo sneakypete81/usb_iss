@@ -8,7 +8,7 @@ except ImportError:
 from hamcrest import assert_that, is_, calling, raises
 from matchmock import called_once_with, called_with
 
-from usb_iss.serial import Serial
+from usb_iss.serial_ import Serial
 from usb_iss import UsbIssError
 
 
