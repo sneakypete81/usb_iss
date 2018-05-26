@@ -36,7 +36,7 @@ class SPI(object):
                 during the transfer.
         Returns:
             list of int: List of bytes read from the device during the
-                transfer.
+            transfer.
         """
         if len(write_data) > defs.SPI_MAX_BYTE_COUNT:
             raise UsbIssError(

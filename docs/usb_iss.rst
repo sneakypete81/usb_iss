@@ -41,4 +41,20 @@ usb\_iss.io module
     :undoc-members:
     :show-inheritance:
 
+usb\_iss.serial module
+----------------------
+
+.. automodule:: usb_iss.serial
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+usb\_iss.spi module
+-------------------
+
+.. automodule:: usb_iss.spi
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
