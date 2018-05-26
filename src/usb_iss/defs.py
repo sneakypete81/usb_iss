@@ -65,13 +65,6 @@ class I2CCommand(Enum):
     I2C_TEST = 0x58
 
 
-# Maximum number of bytes that can be read/written in a single command
-I2C_AD1_MAX_WRITE_BYTE_COUNT = 60
-I2C_AD1_MAX_READ_BYTE_COUNT = 60
-I2C_AD2_MAX_WRITE_BYTE_COUNT = 59
-I2C_AD2_MAX_READ_BYTE_COUNT = 64
-
-
 class I2CDirect(Enum):
     START = 0x01
     RESTART = 0x02
@@ -123,7 +116,19 @@ class I2CTestResponse(Enum):
     NO_DEVICE = 0x00
 
 
+class SPICommand(Enum):
+    TRANSFER = 0x61
+
+
 class IOCommand(Enum):
     SET_PINS = 0x63
     GET_PINS = 0x64
     GET_AD = 0x65
+
+
+# Maximum number of bytes that can be read/written in a single command
+I2C_AD1_MAX_WRITE_BYTE_COUNT = 60
+I2C_AD1_MAX_READ_BYTE_COUNT = 60
+I2C_AD2_MAX_WRITE_BYTE_COUNT = 59
+I2C_AD2_MAX_READ_BYTE_COUNT = 64
+SPI_MAX_BYTE_COUNT = 62
