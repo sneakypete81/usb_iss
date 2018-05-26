@@ -129,6 +129,7 @@ class I2C(object):
             raise UsbIssError(
                 "Attempted to write %d bytes, maximum is %d" %
                 (len(data), defs.I2C_AD1_MAX_WRITE_BYTE_COUNT))
+
         address = address & ~I2C_RD
         self._drv.write_cmd(defs.I2CCommand.I2C_AD1.value,
                             [address, register, len(data)] + data)
@@ -150,6 +151,7 @@ class I2C(object):
             raise UsbIssError(
                 "Attempted to read %d bytes, maximum is %d" %
                 (byte_count, defs.I2C_AD1_MAX_READ_BYTE_COUNT))
+
         address = address | I2C_RD
         self._drv.write_cmd(defs.I2CCommand.I2C_AD1.value,
                             [address, register, byte_count])
@@ -170,6 +172,7 @@ class I2C(object):
             raise UsbIssError(
                 "Attempted to write %d bytes, maximum is %d" %
                 (len(data), defs.I2C_AD2_MAX_WRITE_BYTE_COUNT))
+
         address = address & ~I2C_RD
         reg_high = register >> 8
         reg_low = register & 0xFF
@@ -194,6 +197,7 @@ class I2C(object):
             raise UsbIssError(
                 "Attempted to read %d bytes, maximum is %d" %
                 (byte_count, defs.I2C_AD2_MAX_READ_BYTE_COUNT))
+
         address = address | I2C_RD
         reg_high = register >> 8
         reg_low = register & 0xFF
