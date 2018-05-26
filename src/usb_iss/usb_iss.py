@@ -4,6 +4,7 @@ from .driver import Driver, DummyDriver
 from .i2c import I2C
 from .io import IO
 from .spi import SPI
+from .serial import Serial
 
 
 class UsbIss(object):
@@ -33,6 +34,8 @@ class UsbIss(object):
         i2c (:class:`i2c.I2C`): Attribute to use for I2C access.
         io (:class:`io.IO`): Attribute to use for pin IO access.
         spi (:class:`spi.SPI`): Attribute to use for SPI access.
+        serial (:class:`serial.Serial`): Attribute to use for Serial UART
+            access.
 
     """
     def __init__(self, dummy=False):
@@ -41,6 +44,7 @@ class UsbIss(object):
         self.i2c = I2C(self._drv)
         self.io = IO(self._drv)
         self.spi = SPI(self._drv)
+        self.serial = Serial(self._drv)
 
     def open(self, port):
         """
