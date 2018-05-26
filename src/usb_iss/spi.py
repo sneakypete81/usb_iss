@@ -9,9 +9,9 @@ class SPI(object):
     Example:
         ::
 
-            from usb_iss import UsbIss, defs
+            from usb_iss import UsbIss
 
-            # Configure I2C mode
+            # Configure SPI mode
 
             iss = UsbIss()
             iss.open("COM3")
