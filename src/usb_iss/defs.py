@@ -56,13 +56,18 @@ class SPIMode(Enum):
     TX_IDLE_TO_ACTIVE_IDLE_HIGH = 0x93
 
 
-class I2CCommand(Enum):
+class Command(Enum):
     I2C_SGL = 0x53
     I2C_AD0 = 0x54
     I2C_AD1 = 0x55
     I2C_AD2 = 0x56
     I2C_DIRECT = 0x57
     I2C_TEST = 0x58
+    SPI = 0x61
+    SERIAL = 0x62
+    SET_PINS = 0x63
+    GET_PINS = 0x64
+    GET_AD = 0x65
 
 
 class I2CDirect(Enum):
@@ -114,16 +119,6 @@ class I2CDirectError(Enum):
 class I2CTestResponse(Enum):
     """ Nonzero means device was found """
     NO_DEVICE = 0x00
-
-
-class SPICommand(Enum):
-    TRANSFER = 0x61
-
-
-class IOCommand(Enum):
-    SET_PINS = 0x63
-    GET_PINS = 0x64
-    GET_AD = 0x65
 
 
 # Maximum number of bytes that can be read/written in a single command

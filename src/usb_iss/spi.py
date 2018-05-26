@@ -43,6 +43,6 @@ class SPI(object):
                 "Attempted to write %d bytes, maximum is %d" %
                 (len(write_data), defs.SPI_MAX_BYTE_COUNT))
 
-        self._drv.write_cmd(defs.SPICommand.TRANSFER.value, write_data)
+        self._drv.write_cmd(defs.Command.SPI.value, write_data)
         self._drv.check_ack()
         return self._drv.read(len(write_data))
