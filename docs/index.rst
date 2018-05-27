@@ -8,6 +8,6 @@ Contents
    :maxdepth: 1
 
    Getting Started <readme>
+   API Documentation <usb_iss>
    contributing
    history
-   API Documentation <usb_iss>

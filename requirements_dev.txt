@@ -9,6 +9,7 @@ pip==10.0.1
 pyhamcrest==1.9.0
 sphinx==1.7.4
 sphinxcontrib-napoleon==0.6.1
+sphinx-rtd-theme==0.3.1
 twine==1.11.0
 tox==3.0.0
 wheel==0.31.1
