@@ -4,7 +4,7 @@ from . import defs
 
 class SPI(object):
     """
-    Use the USB_ISS module to perform SPI accesses.
+    Use the USB_ISS device to perform SPI accesses.
 
     Example:
         ::

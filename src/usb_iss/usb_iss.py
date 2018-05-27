@@ -9,7 +9,7 @@ from .serial_ import Serial
 
 class UsbIss(object):
     """
-    Main USB_ISS object.
+    Main object used to interact with the USB_ISS device.
 
     Example:
         ::
@@ -31,11 +31,15 @@ class UsbIss(object):
             # [0, 1, 2]
 
     Attributes:
-        i2c (:class:`i2c.I2C`): Attribute to use for I2C access.
-        io (:class:`io.IO`): Attribute to use for pin IO access.
-        spi (:class:`spi.SPI`): Attribute to use for SPI access.
+        i2c (:class:`i2c.I2C`): Attribute to use for I2C access. See
+            :class:`i2c.I2C` for the full set of I2C methods.
+        io (:class:`io.IO`): Attribute to use for pin IO access. See
+            :class:`io.IO` for the full set of IO methods.
+        spi (:class:`spi.SPI`): Attribute to use for SPI access. See
+            :class:`spi.SPI` for the full set of SPI methods.
         serial (:class:`serial_.Serial`): Attribute to use for Serial UART
-            access.
+            access. See :class:`serial_.Serial` for the full set of Serial
+            methods.
 
     """
     def __init__(self, dummy=False):
@@ -67,7 +71,7 @@ class UsbIss(object):
                   io1_type=defs.IOType.DIGITAL_INPUT,
                   io2_type=defs.IOType.DIGITAL_INPUT):
         """
-        Issue a ISS_MODE command to set the operating mode to I2C + IO.
+        Issue an ISS_MODE command to set the operating mode to I2C + IO.
 
         Args:
             clock_khz (int): I2C clock rate in kHz.
@@ -86,7 +90,7 @@ class UsbIss(object):
     def setup_i2c_serial(self, clock_khz=400, use_i2c_hardware=True,
                          baud_rate=9600):
         """
-        Issue a ISS_MODE command to set the operating mode to I2C + Serial.
+        Issue an ISS_MODE command to set the operating mode to I2C + Serial.
 
         Args:
             clock_khz (int): I2C clock rate in kHz.
@@ -103,7 +107,7 @@ class UsbIss(object):
     def setup_spi(self, spi_mode=defs.SPIMode.TX_ACTIVE_TO_IDLE_IDLE_LOW,
                   clock_khz=500):
         """
-        Issue a ISS_MODE command to set the operating mode to SPI.
+        Issue an ISS_MODE command to set the operating mode to SPI.
 
         Args:
             spi_mode (defs.SPIMode): SPI mode option to use.
@@ -118,7 +122,7 @@ class UsbIss(object):
                  io3_type=defs.IOType.DIGITAL_INPUT,
                  io4_type=defs.IOType.DIGITAL_INPUT):
         """
-        Issue a ISS_MODE command to set the operating mode to IO.
+        Issue an ISS_MODE command to set the operating mode to IO.
 
         Args:
             io1_type (defs.IOType): IO1 mode
@@ -135,7 +139,7 @@ class UsbIss(object):
                   io3_type=defs.IOType.DIGITAL_INPUT,
                   io4_type=defs.IOType.DIGITAL_INPUT):
         """
-        Issue a ISS_MODE command to change the current IO mode without
+        Issue an ISS_MODE command to change the current IO mode without
         affecting serial or I2C settings.
 
         Args:
@@ -151,7 +155,7 @@ class UsbIss(object):
                      io3_type=defs.IOType.DIGITAL_INPUT,
                      io4_type=defs.IOType.DIGITAL_INPUT):
         """
-        Issue a ISS_MODE command to set the operating mode to Serial + IO.
+        Issue an ISS_MODE command to set the operating mode to Serial + IO.
 
         Args:
             baud_rate (int): Baud rate for the serial interface.

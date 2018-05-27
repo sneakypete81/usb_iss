@@ -6,7 +6,7 @@ I2C_RD = 0x01
 
 class I2C(object):
     """
-    Use the USB_ISS module to perform I2C accesses.
+    Use the USB_ISS device to perform I2C accesses.
 
     Example:
         ::
@@ -33,8 +33,8 @@ class I2C(object):
     def write(self, address, register, data):
         """
         Write multiple bytes to a device with a one-byte internal register
-        address. The majority of devices will be written to using this method.
-        This is an alias for the write_ad1 method.
+        address. This is an alias for the write_ad1 method, used by the
+        majority of devices.
 
         Args:
             address (int): I2C address of the device.
@@ -47,8 +47,8 @@ class I2C(object):
     def read(self, address, register, byte_count):
         """
         Read multiple bytes from a device with a one-byte internal register
-        address. The majority of devices will be read from using this method.
-        This is an alias for the read_ad1 method.
+        address. This is an alias for the read_ad1 method, used by the majority
+        of devices.
 
         Args:
             address (int): I2C address of the device.

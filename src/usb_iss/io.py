@@ -4,7 +4,24 @@ from .exceptions import UsbIssError
 
 class IO(object):
     """
-    Use the USB_ISS module to perform IO accesses.
+    Use the USB_ISS device to perform IO accesses.
+
+    Example:
+        ::
+
+            from usb_iss import UsbIss
+
+            # Configure IO mode with all outputs low
+
+            iss = UsbIss()
+            iss.open("COM3")
+            iss.setup_io(io1_type=defs.IOType.OUTPUT_LOW,
+                         io2_type=defs.IOType.OUTPUT_LOW,
+                         io3_type=defs.IOType.OUTPUT_LOW,
+                         io4_type=defs.IOType.OUTPUT_LOW)
+
+            # Drive IO1 & IO3 high
+            iss.io.set_pins(1, 0, 1, 0);
     """
     def __init__(self, drv):
         self._drv = drv

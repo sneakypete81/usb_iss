@@ -4,7 +4,7 @@ from . import defs
 
 class Serial(object):
     """
-    Use the USB_ISS module to perform Serial UART accesses.
+    Use the USB_ISS device to perform Serial UART accesses.
 
     Example:
         ::

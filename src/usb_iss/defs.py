@@ -1,5 +1,5 @@
 """
-Definitions defined at http://www.robot-electronics.co.uk/htm/usb_iss_tech.htm
+Definitions from http://www.robot-electronics.co.uk/htm/usb_iss_tech.htm.
 """
 from enum import Enum
 
@@ -9,7 +9,7 @@ CMD_USB_ISS = 0x5A
 
 class ResponseCode(Enum):
     """
-    Note: For I2C, NACK = 0x00, ACK = Non-zero.
+    Note: For I2C: NACK = 0x00, ACK = Non-zero.
     """
     NACK = 0x00
     ACK = 0xFF
