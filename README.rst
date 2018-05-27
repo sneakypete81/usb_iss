@@ -57,6 +57,13 @@ Usage Example
     print(data)
     # [0, 1, 2]
 
+Installing
+----------
+.. code-block:: bash
+
+    pip install usb-iss
+
+Supports Python 2.7 & 3.4+.
 
 ----
 
