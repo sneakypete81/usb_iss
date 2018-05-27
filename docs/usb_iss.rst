@@ -41,10 +41,10 @@ usb\_iss.io module
     :undoc-members:
     :show-inheritance:
 
-usb\_iss.serial module
-----------------------
+usb\_iss.serial\_ module
+------------------------
 
-.. automodule:: usb_iss.serial
+.. automodule:: usb_iss.serial_
     :members:
     :undoc-members:
     :show-inheritance:

@@ -34,7 +34,7 @@ class UsbIss(object):
         i2c (:class:`i2c.I2C`): Attribute to use for I2C access.
         io (:class:`io.IO`): Attribute to use for pin IO access.
         spi (:class:`spi.SPI`): Attribute to use for SPI access.
-        serial (:class:`serial.Serial`): Attribute to use for Serial UART
+        serial (:class:`serial_.Serial`): Attribute to use for Serial UART
             access.
 
     """
