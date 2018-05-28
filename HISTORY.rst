@@ -2,6 +2,13 @@
 History
 =======
 
+0.3.0 (2018-05-28)
+------------------
+
+* Add SPI support
+* Add Serial UART support
+* Improve test coverage
+
 0.2.4 (2018-05-23)
 ------------------
 
