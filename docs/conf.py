@@ -100,7 +100,7 @@ html_theme = 'sphinx_rtd_theme'
 # documentation.
 #
 html_theme_options = {
-    'canonical_url': 'https://usb-iss.readthedocs.io/',
+    'canonical_url': 'https://usb-iss.readthedocs.io/en/latest/',
 }
 
 
