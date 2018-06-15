@@ -50,7 +50,7 @@ class Driver(object):
         if byte_count == 0:
             return []
 
-        data = list(self._serial.read(byte_count))
+        data = list(bytes(self._serial.read(byte_count)))
         if len(data) != byte_count:
             raise UsbIssError(
                 "Expected %d bytes, but %d received" % (byte_count, len(data)))
