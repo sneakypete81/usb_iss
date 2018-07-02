@@ -110,6 +110,14 @@ class TestDriver(unittest.TestCase):
             calling(driver.read).with_args(2),
             raises(UsbIssError, "Serial port has not been opened"))
 
+    def test_read_with_serial_string(self, serial):
+        driver = Driver().open('PORTNAME')
+        serial().read.return_value = b"\x01\x02"
+
+        data = driver.read(2)
+
+        assert_that(data, is_([0x01, 0x02]))
+
     def test_check_i2c_ack_passing_with_0x01(self, serial):
         driver = Driver().open('PORTNAME')
         serial().read.return_value = bytes([0x01])
