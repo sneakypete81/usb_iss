@@ -50,7 +50,7 @@ class UsbIss(object):
         self.spi = SPI(self._drv)
         self.serial = Serial(self._drv)
     
-    def list_ports(self):
+    def get_port(self):
         plist = list(serial.tools.list_ports.comports())
         for p in plist:
             if p.vid == defs.VID_USB_ISS and p.pid == defs.PID_USB_ISS:
