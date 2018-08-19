@@ -25,7 +25,7 @@ class Driver(object):
     """
     def __init__(self):
         self._serial = None
-           
+
     def open(self, port):
         self._serial = serial.Serial(port=port, **SERIAL_OPTS)
         return self
