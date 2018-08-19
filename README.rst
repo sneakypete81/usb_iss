@@ -46,7 +46,9 @@ Usage Example
     # Configure I2C mode
 
     iss = UsbIss()
-    iss.open("COM3")
+    p = iss.get_port(vid=0x04D8, pid=0xFFEE)
+    iss.open(p)
+    # iss.open("COM3")
     iss.setup_i2c()
 
     # Write and read back some data
@@ -56,6 +58,12 @@ Usage Example
 
     print(data)
     # [0, 1, 2]
+    
+    iss.i2c.write_ad2(0x1e,0x0002,[0x80, 0x0])
+    data = iss.i2c.read_ad2(0x1e,0x0002,2)
+    print("0x%02x 0x%02x" %(data[1], data[0]))
+    
+    iss.close()
 
 Installing
 ----------
