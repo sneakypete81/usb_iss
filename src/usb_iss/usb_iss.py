@@ -5,7 +5,7 @@ from .i2c import I2C
 from .io import IO
 from .spi import SPI
 from .serial_ import Serial
-
+import serial.tools.list_ports
 
 class UsbIss(object):
     """
@@ -49,7 +49,14 @@ class UsbIss(object):
         self.io = IO(self._drv)
         self.spi = SPI(self._drv)
         self.serial = Serial(self._drv)
-
+    
+    def list_ports(self):
+        plist = list(serial.tools.list_ports.comports())
+        for p in plist:
+            if p.vid == defs.VID_USB_ISS and p.pid == defs.PID_USB_ISS:
+                return p.device
+        raise UsbIssError("\nCan't find usb-iss device!\n")
+        
     def open(self, port):
         """
         Open the specified serial port for communication with the USB_ISS
