@@ -50,10 +50,10 @@ class UsbIss(object):
         self.spi = SPI(self._drv)
         self.serial = Serial(self._drv)
     
-    def get_port(self):
+    def get_port(self, vid=defs.VID_USB_ISS, pid=defs.PID_USB_ISS):
         plist = list(serial.tools.list_ports.comports())
         for p in plist:
-            if p.vid == defs.VID_USB_ISS and p.pid == defs.PID_USB_ISS:
+            if p.vid == vid and p.pid == pid:
                 return p.device
         raise UsbIssError("\nCan't find usb-iss device!\n")
         
