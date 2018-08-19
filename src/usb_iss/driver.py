@@ -1,5 +1,5 @@
 import serial
-import serial.tools.list_ports
+
 from .exceptions import UsbIssError
 from . import defs
 
@@ -25,14 +25,7 @@ class Driver(object):
     """
     def __init__(self):
         self._serial = None
-    
-    def list_ports(self):
-        plist = list(serial.tools.list_ports.comports())
-        for p in plist:
-            if p.vid == defs.VID_USB_ISS and p.pid == defs.PID_USB_ISS:
-                return p.device
-        raise UsbIssError("\nCan't find usb-iss device!\n")
-        
+           
     def open(self, port):
         self._serial = serial.Serial(port=port, **SERIAL_OPTS)
         return self
