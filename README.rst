@@ -40,7 +40,8 @@ Features
 Usage Example
 -------------
 .. code-block:: python
-
+    #!/usr/bin/python
+    #encoding: utf-8
     from usb_iss import UsbIss, defs
 
     # Configure I2C mode
