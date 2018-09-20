@@ -48,7 +48,8 @@ Usage Example
     iss = UsbIss()
     p = iss.get_port(vid=0x04D8, pid=0xFFEE)
     iss.open(p)
-    # iss.open("COM3")
+    # iss.open("COM3")  # windows
+    # iss.open("/dev/ttyACM0") # linux
     iss.setup_i2c()
 
     # Write and read back some data
