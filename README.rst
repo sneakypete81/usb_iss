@@ -40,6 +40,7 @@ Features
 Usage Example
 -------------
 .. code-block:: python
+
     #coding:utf-8
     from usb_iss import UsbIss, defs
 
