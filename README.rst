@@ -57,7 +57,6 @@ Usage Example
 
     iss.i2c.write(0xC4, 0, [0, 1, 2]);
     data = iss.i2c.read(0xC4, 0, 3)
-
     print(data)
     # [0, 1, 2]
     
@@ -71,7 +70,7 @@ Installing
 ----------
 .. code-block:: bash
 
-    pip install usb-iss
+    python setup.py install
 
 Supports Python 2.7 & 3.4+.
 
