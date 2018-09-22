@@ -47,7 +47,7 @@ Usage Example
     # Configure I2C mode
 
     iss = UsbIss()
-    p = iss.get_port(vid=0x04D8, pid=0xFFEE)
+    p = iss.get_port()
     iss.open(p)
     # iss.open("COM3")  # windows
     # iss.open("/dev/ttyACM0") # linux
