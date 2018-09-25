@@ -6,6 +6,7 @@ from .io import IO
 from .spi import SPI
 from .serial_ import Serial
 import serial.tools.list_ports
+import platform
 
 class UsbIss(object):
     """
@@ -19,7 +20,8 @@ class UsbIss(object):
             # Configure I2C mode
 
             iss = UsbIss()
-            iss.open("COM3")
+            iss.open("COM3") 
+            # or get port by defualt vid/pid: iss.open(iss.get_port())
             iss.setup_i2c()
 
             # Write and read back some data
@@ -51,10 +53,18 @@ class UsbIss(object):
         self.serial = Serial(self._drv)
     
     def get_port(self):
+        """
+        Get serial port by searching VID and PID from system device.
+        return: port, eg: windows: COM3... , linux: /dev/ttyACM0...
+        """
         plist = list(serial.tools.list_ports.comports())
         for p in plist:
-            if p.vid == defs.VID_USB_ISS and p.pid == defs.PID_USB_ISS:
-                return p.device
+            if platform.system() in 'Windows':
+                if p.vid == vid and p.pid == pid:
+                    return p.device
+            elif platform.system() in 'Linux':
+                if 'USB VID:PID=04d8:ffee' in p[2]:
+                    return p[0]
         raise UsbIssError("\nCan't find usb-iss device!\n")
         
     def open(self, port):
