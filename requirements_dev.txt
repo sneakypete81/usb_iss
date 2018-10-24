@@ -1,6 +1,6 @@
 bumpversion==0.5.3
 coverage==4.5.1
-flake8==3.5.0
+flake8==3.6.0
 matchmock==0.7.1
 # Mock is not included in Python2
 mock==2.0.0; python_version=='2.7'
