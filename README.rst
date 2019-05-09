@@ -6,17 +6,13 @@ USB-ISS Python Library
     :target: https://pypi.python.org/pypi/usb_iss
     :alt: PyPi
 
-.. image:: https://img.shields.io/travis/sneakypete81/usb_iss.svg
-    :target: https://travis-ci.org/sneakypete81/usb_iss
+.. image:: https://api.travis-ci.org/sneakypete81/usb_iss.svg?branch=master
+    :target: https://travis-ci.org/sneakypete81/usb_iss/branches
     :alt: TravisCI
 
 .. image:: https://readthedocs.org/projects/usb-iss/badge/?version=latest
     :target: https://usb-iss.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
-
-.. image:: https://pyup.io/repos/github/sneakypete81/usb_iss/shield.svg
-    :target: https://pyup.io/repos/github/sneakypete81/usb_iss/
-    :alt: Updates
 
 Python library for the USB-ISS module.
 
