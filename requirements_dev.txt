@@ -12,6 +12,6 @@ sphinxcontrib-napoleon==0.7
 sphinx-rtd-theme==0.4.3
 twine==1.13.0
 tox==3.9.0
-wheel==0.33.1
+wheel==0.33.2
 
 -r requirements.txt
