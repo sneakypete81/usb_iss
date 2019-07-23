@@ -59,7 +59,7 @@ Installing
 
     pip install usb-iss
 
-Supports Python 2.7 & 3.4+.
+Supports Python 2.7 & 3.5+.
 
 ----
 
