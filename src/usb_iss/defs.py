@@ -5,7 +5,8 @@ from enum import Enum
 
 # USB-ISS command
 CMD_USB_ISS = 0x5A
-
+VID_USB_ISS = 0x04D8
+PID_USB_ISS = 0xFFEE
 
 class ResponseCode(Enum):
     """

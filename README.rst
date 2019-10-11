@@ -37,27 +37,35 @@ Usage Example
 -------------
 .. code-block:: python
 
+    #coding:utf-8
     from usb_iss import UsbIss, defs
 
     # Configure I2C mode
 
     iss = UsbIss()
-    iss.open("COM3")
+    iss.open(iss.get_port())
+    # iss.open("COM3")  # windows
+    # iss.open("/dev/ttyACM0") # linux
     iss.setup_i2c()
 
     # Write and read back some data
 
     iss.i2c.write(0xC4, 0, [0, 1, 2]);
     data = iss.i2c.read(0xC4, 0, 3)
-
     print(data)
     # [0, 1, 2]
+    
+    iss.i2c.write_ad2(0x1e,0x0002,[0x80, 0x0])
+    data = iss.i2c.read_ad2(0x1e,0x0002,2)
+    print("0x%02x 0x%02x" %(data[1], data[0]))
+    
+    iss.close()
 
 Installing
 ----------
 .. code-block:: bash
 
-    pip install usb-iss
+    python setup.py install
 
 Supports Python 2.7 & 3.5+.
 

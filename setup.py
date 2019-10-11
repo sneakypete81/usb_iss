@@ -13,7 +13,7 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'pyserial',
-    'enum34; python_version=="2.7"',
+    'enum34',
 ]
 
 setup(
