@@ -46,7 +46,7 @@ class IOType(Enum):
     OUTPUT_HIGH = 0x01
     DIGITAL_INPUT = 0x02
     ANALOGUE_INPUT = 0x03
-    NULL = 0x00
+    NULL = 0xFF
 
 
 class SPIMode(Enum):
