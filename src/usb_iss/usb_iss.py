@@ -70,8 +70,8 @@ class UsbIss(object):
         self._drv.close()
 
     def setup_i2c(self, clock_khz=400, use_i2c_hardware=True,
-                  io1_type=defs.IOType.NULL,
-                  io2_type=defs.IOType.NULL):
+                  io1_type=None,
+                  io2_type=None):
         """
         Issue an ISS_MODE command to set the operating mode to I2C + IO.
 
@@ -85,9 +85,8 @@ class UsbIss(object):
             io2_type (defs.IOType): IO2 mode
         """
         i2c_mode = self._get_i2c_mode(clock_khz, use_i2c_hardware)
-        io_type = self._get_io_type(io1_type, io2_type,
-                                    defs.IOType.NULL, defs.IOType.NULL)
-        self._set_mode(i2c_mode, [io_type])
+        io_type = self._get_io_type(io1_type, io2_type, None, None)
+        self._set_mode(i2c_mode, [io_type & 0x0F])
         self.current_io_type = io_type
 
     def setup_i2c_serial(self, clock_khz=400, use_i2c_hardware=True,
@@ -120,10 +119,10 @@ class UsbIss(object):
         self._set_mode(spi_mode.value, [divisor])
 
     def setup_io(self,
-                 io1_type=defs.IOType.NULL,
-                 io2_type=defs.IOType.NULL,
-                 io3_type=defs.IOType.NULL,
-                 io4_type=defs.IOType.NULL):
+                 io1_type=None,
+                 io2_type=None,
+                 io3_type=None,
+                 io4_type=None):
         """
         Issue an ISS_MODE command to set the operating mode to IO.
 
@@ -138,10 +137,10 @@ class UsbIss(object):
         self.current_io_type = io_type
 
     def change_io(self,
-                  io1_type=defs.IOType.NULL,
-                  io2_type=defs.IOType.NULL,
-                  io3_type=defs.IOType.NULL,
-                  io4_type=defs.IOType.NULL):
+                  io1_type=None,
+                  io2_type=None,
+                  io3_type=None,
+                  io4_type=None):
         """
         Issue an ISS_MODE command to change the current IO mode without
         affecting serial or I2C settings.
@@ -157,8 +156,8 @@ class UsbIss(object):
         self.current_io_type = io_type
 
     def setup_serial(self, baud_rate=9600,
-                     io3_type=defs.IOType.NULL,
-                     io4_type=defs.IOType.NULL):
+                     io3_type=None,
+                     io4_type=None):
         """
         Issue an ISS_MODE command to set the operating mode to Serial + IO.
 
@@ -168,9 +167,8 @@ class UsbIss(object):
             io4_type (defs.IOType): IO4 mode
         """
         divisor = self._get_serial_divisor(baud_rate)
-        io_type = self._get_io_type(defs.IOType.NULL, defs.IOType.NULL,
-                                    io3_type, io4_type)
-        self._set_mode(defs.Mode.SERIAL.value, divisor + [io_type])
+        io_type = self._get_io_type(None, None, io3_type, io4_type)
+        self._set_mode(defs.Mode.SERIAL.value, divisor + [io_type & 0xF0])
         self.current_io_type = io_type
 
     def read_module_id(self):
@@ -218,13 +216,13 @@ class UsbIss(object):
     def _get_io_type(self, io1_type, io2_type, io3_type, io4_type):
         new_io_type = self.current_io_type
 
-        if io1_type != defs.IOType.NULL:
+        if io1_type is not None:
             new_io_type = (new_io_type & 0xFC) | (io1_type.value << 0)
-        if io2_type != defs.IOType.NULL:
+        if io2_type is not None:
             new_io_type = (new_io_type & 0xF3) | (io2_type.value << 2)
-        if io3_type != defs.IOType.NULL:
+        if io3_type is not None:
             new_io_type = (new_io_type & 0xCF) | (io3_type.value << 4)
-        if io4_type != defs.IOType.NULL:
+        if io4_type is not None:
             new_io_type = (new_io_type & 0x3F) | (io4_type.value << 6)
 
         return new_io_type
