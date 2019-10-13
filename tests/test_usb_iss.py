@@ -48,7 +48,7 @@ class TestUSbIss(unittest.TestCase):
                 io2_type=defs.IOType.OUTPUT_HIGH)
 
             assert_that(self.driver.write_cmd,
-                        called_with(0x5A, [0x02, i2c_mode, 0xA4]))
+                        called_with(0x5A, [0x02, i2c_mode, 0x04]))
 
     def test_setup_i2c_default_values(self):
         self.usb_iss.setup_i2c()
@@ -57,8 +57,6 @@ class TestUSbIss(unittest.TestCase):
                     called_once_with(0x5A, [
                         0x02,
                         defs.Mode.I2C_H_400KHZ.value,
-                        defs.IOType.DIGITAL_INPUT.value << 6 |
-                        defs.IOType.DIGITAL_INPUT.value << 4 |
                         defs.IOType.DIGITAL_INPUT.value << 2 |
                         defs.IOType.DIGITAL_INPUT.value]))
 
@@ -268,7 +266,7 @@ class TestUSbIss(unittest.TestCase):
                                       io4_type=defs.IOType.OUTPUT_HIGH)
 
             assert_that(self.driver.write_cmd,
-                        called_with(0x5A, [0x02, 0x01] + divisor + [0x4A]))
+                        called_with(0x5A, [0x02, 0x01] + divisor + [0x40]))
 
     def test_setup_serial_default_values(self):
         self.usb_iss.setup_serial()
@@ -277,9 +275,7 @@ class TestUSbIss(unittest.TestCase):
                     called_once_with(0x5A,
                                      [0x02, 0x01, 0x01, 0x37,
                                       defs.IOType.DIGITAL_INPUT.value << 6 |
-                                      defs.IOType.DIGITAL_INPUT.value << 4 |
-                                      defs.IOType.DIGITAL_INPUT.value << 2 |
-                                      defs.IOType.DIGITAL_INPUT.value]))
+                                      defs.IOType.DIGITAL_INPUT.value << 4]))
 
     def test_setup_serial_failure(self):
         self.driver.check_ack_error_code.side_effect = UsbIssError
@@ -403,7 +399,13 @@ class TestUSbIss(unittest.TestCase):
             io4_type=defs.IOType.DIGITAL_INPUT)
 
         assert_that(self.driver.write_cmd,
-                    called_with(0x5A, [0x02, 0x00, 0xB4]))
+                    called_with(0x5A, [
+                        0x02,
+                        0x00,
+                        defs.IOType.DIGITAL_INPUT.value << 6 |
+                        defs.IOType.ANALOGUE_INPUT.value << 4 |
+                        defs.IOType.OUTPUT_HIGH.value << 2 |
+                        defs.IOType.OUTPUT_LOW.value]))
 
         self.usb_iss.setup_i2c(
             io1_type=defs.IOType.DIGITAL_INPUT,
@@ -413,8 +415,6 @@ class TestUSbIss(unittest.TestCase):
                     called_with(0x5A, [
                         0x02,
                         defs.Mode.I2C_H_400KHZ.value,
-                        defs.IOType.DIGITAL_INPUT.value << 6 |
-                        defs.IOType.ANALOGUE_INPUT.value << 4 |
                         defs.IOType.ANALOGUE_INPUT.value << 2 |
                         defs.IOType.DIGITAL_INPUT.value]))
 
@@ -426,7 +426,13 @@ class TestUSbIss(unittest.TestCase):
             io4_type=defs.IOType.DIGITAL_INPUT)
 
         assert_that(self.driver.write_cmd,
-                    called_with(0x5A, [0x02, 0x00, 0xB4]))
+                    called_with(0x5A, [
+                        0x02,
+                        0x00,
+                        defs.IOType.DIGITAL_INPUT.value << 6 |
+                        defs.IOType.ANALOGUE_INPUT.value << 4 |
+                        defs.IOType.OUTPUT_HIGH.value << 2 |
+                        defs.IOType.OUTPUT_LOW.value]))
 
         self.usb_iss.setup_i2c()
 
@@ -434,7 +440,28 @@ class TestUSbIss(unittest.TestCase):
                     called_with(0x5A, [
                         0x02,
                         defs.Mode.I2C_H_400KHZ.value,
-                        defs.IOType.DIGITAL_INPUT.value << 6 |
-                        defs.IOType.ANALOGUE_INPUT.value << 4 |
                         defs.IOType.OUTPUT_HIGH.value << 2 |
+                        defs.IOType.OUTPUT_LOW.value]))
+
+    def test_setup_i2c_defaults_then_change_io_partial(self):
+        self.usb_iss.setup_i2c()
+
+        assert_that(self.driver.write_cmd,
+                    called_with(0x5A, [
+                        0x02,
+                        defs.Mode.I2C_H_400KHZ.value,
+                        defs.IOType.DIGITAL_INPUT.value << 2 |
+                        defs.IOType.DIGITAL_INPUT.value]))
+
+        self.usb_iss.change_io(
+            io1_type=defs.IOType.OUTPUT_LOW,
+            io4_type=defs.IOType.OUTPUT_HIGH)
+
+        assert_that(self.driver.write_cmd,
+                    called_with(0x5A, [
+                        0x02,
+                        0x10,
+                        defs.IOType.OUTPUT_HIGH.value << 6 |
+                        defs.IOType.DIGITAL_INPUT.value << 4 |
+                        defs.IOType.DIGITAL_INPUT.value << 2 |
                         defs.IOType.OUTPUT_LOW.value]))
