@@ -30,6 +30,10 @@ class UsbIss(object):
             print(data)
             # [0, 1, 2]
 
+    Args:
+        dummy (bool): Use a dummy driver stub, for testing.
+        verbose (bool): Print debug output to the console.
+
     Attributes:
         i2c (:class:`i2c.I2C`): Attribute to use for I2C access. See
             :class:`i2c.I2C` for the full set of I2C methods.
@@ -42,8 +46,8 @@ class UsbIss(object):
             methods.
 
     """
-    def __init__(self, dummy=False):
-        self._drv = DummyDriver() if dummy else Driver()
+    def __init__(self, dummy=False, verbose=False):
+        self._drv = DummyDriver() if dummy else Driver(verbose)
 
         self.i2c = I2C(self._drv)
         self.io = IO(self._drv)

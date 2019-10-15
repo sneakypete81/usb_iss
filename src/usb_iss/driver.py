@@ -1,3 +1,4 @@
+from __future__ import print_function
 import serial
 
 from .exceptions import UsbIssError
@@ -23,8 +24,9 @@ class Driver(object):
     """
     Internal serial port driver. Don't use this class directly.
     """
-    def __init__(self):
+    def __init__(self, verbose=False):
         self._serial = None
+        self.verbose = verbose
 
     def open(self, port):
         self._serial = serial.Serial(port=port, **SERIAL_OPTS)
@@ -41,6 +43,11 @@ class Driver(object):
 
         if data is None:
             data = []
+
+        if self.verbose:
+            print("USB_ISS write: ", end="")
+            print(" ".join(["%02X" % byte for byte in [command] + data]))
+
         self._serial.write(bytes([command] + data))
 
     def read(self, byte_count):
@@ -51,6 +58,11 @@ class Driver(object):
             return []
 
         data = list(bytes(self._serial.read(byte_count)))
+
+        if self.verbose:
+            print("USB_ISS read : ", end="")
+            print(" ".join(["%02X" % byte for byte in data]))
+
         if len(data) != byte_count:
             raise UsbIssError(
                 "Expected %d bytes, but %d received" % (byte_count, len(data)))
