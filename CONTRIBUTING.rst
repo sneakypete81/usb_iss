@@ -38,9 +38,9 @@ and "help wanted" is open to whoever wants to implement it.
 Write Documentation
 ~~~~~~~~~~~~~~~~~~~
 
-The USB-ISS Python Library could always use more documentation, whether as part of the
-official USB-ISS Python Library docs, in docstrings, or even on the web in blog posts,
-articles, and such.
+The USB-ISS Python Library could always use more documentation, whether as part
+of the official USB-ISS Python Library docs, in docstrings, or even on the web
+in blog posts, articles, and such.
 
 Submit Feedback
 ~~~~~~~~~~~~~~~
