@@ -29,9 +29,9 @@ Features
 --------
 
 * I2C Mode
-* IO Mode (untested)
-* SPI Mode (untested)
-* Serial Mode (untested)
+* IO Mode
+* SPI Mode
+* Serial Mode
 
 Usage Example
 -------------
