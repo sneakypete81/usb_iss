@@ -5,9 +5,9 @@ Changelog
 1.0.0 (2019-10-16)
 ------------------
 
- * BREAKING CHANGE: Remember the previous IO state in the setup_* methods
- * BREAKING CHANGE: Improve the serial mode API
- * Add verbose logging option
+* BREAKING CHANGE: Remember the previous IO state in the setup_* methods
+* BREAKING CHANGE: Improve the serial mode API
+* Add verbose logging option
 
 0.3.1 (2018-07-02)
 ------------------
