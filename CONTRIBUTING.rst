@@ -114,7 +114,7 @@ Deploying
 
 A reminder for the maintainers on how to deploy::
 
-$ # Update HISTORY.rst
+$ # Update CHANGELOG.rst
 $ bumpversion [major|minor|patch]
 $ git push
 $ git push --tags

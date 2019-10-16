@@ -10,4 +10,4 @@ Contents
    Getting Started <readme>
    API Documentation <usb_iss>
    contributing
-   history
+   changelog
