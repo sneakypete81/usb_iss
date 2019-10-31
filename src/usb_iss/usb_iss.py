@@ -181,7 +181,7 @@ class UsbIss(object):
         Returns:
             int: The USB_ISS module ID (always 7).
         """
-        self._drv.write_cmd(defs.CMD_USB_ISS,
+        self._drv.write_cmd(defs.Command.USB_ISS.value,
                             [defs.SubCommand.ISS_VERSION.value])
         return self._drv.read(3)[0]
 
@@ -190,7 +190,7 @@ class UsbIss(object):
         Returns:
             int: The USB_ISS firmware version.
         """
-        self._drv.write_cmd(defs.CMD_USB_ISS,
+        self._drv.write_cmd(defs.Command.USB_ISS.value,
                             [defs.SubCommand.ISS_VERSION.value])
         return self._drv.read(3)[1]
 
@@ -199,7 +199,7 @@ class UsbIss(object):
         Returns:
             defs.Mode: The current ISS_MODE operating mode.
         """
-        self._drv.write_cmd(defs.CMD_USB_ISS,
+        self._drv.write_cmd(defs.Command.USB_ISS.value,
                             [defs.SubCommand.ISS_VERSION.value])
         return defs.Mode(self._drv.read(3)[2])
 
@@ -208,14 +208,14 @@ class UsbIss(object):
         Returns:
             str: The serial number of the attached USB_ISS module.
         """
-        self._drv.write_cmd(defs.CMD_USB_ISS,
+        self._drv.write_cmd(defs.Command.USB_ISS.value,
                             [defs.SubCommand.GET_SER_NUM.value])
         data = self._drv.read(8)
         return ''.join([chr(byte) for byte in data])
 
     def _set_mode(self, mode_value, data):
         data = [defs.SubCommand.ISS_MODE.value, mode_value] + data
-        self._drv.write_cmd(defs.CMD_USB_ISS, data)
+        self._drv.write_cmd(defs.Command.USB_ISS.value, data)
         self._drv.check_ack_error_code(defs.ModeError)
 
     def _get_io_type(self, io1_type, io2_type, io3_type, io4_type):

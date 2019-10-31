@@ -3,9 +3,6 @@ Definitions from http://www.robot-electronics.co.uk/htm/usb_iss_tech.htm.
 """
 from enum import Enum
 
-# USB-ISS command
-CMD_USB_ISS = 0x5A
-
 
 class ResponseCode(Enum):
     """
@@ -62,6 +59,7 @@ class Command(Enum):
     I2C_AD2 = 0x56
     I2C_DIRECT = 0x57
     I2C_TEST = 0x58
+    USB_ISS = 0x5A
     SPI = 0x61
     SERIAL = 0x62
     SET_PINS = 0x63
