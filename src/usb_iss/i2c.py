@@ -257,4 +257,4 @@ class I2C(object):
         """
         address_8bit = address << 1
         self._drv.write_cmd(defs.Command.I2C_TEST.value, [address_8bit])
-        return self._drv.read(1) != [defs.I2CTestResponse.NO_DEVICE.value]
+        return self._drv.read(1) != [defs.ResponseCode.NACK.value]

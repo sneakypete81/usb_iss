@@ -113,11 +113,6 @@ class I2CDirectError(Enum):
     UNKNOWN_COMMAND = 0x04
 
 
-class I2CTestResponse(Enum):
-    """ Nonzero means device was found """
-    NO_DEVICE = 0x00
-
-
 # Maximum number of bytes that can be read/written in a single command
 I2C_AD1_MAX_WRITE_BYTE_COUNT = 60
 I2C_AD1_MAX_READ_BYTE_COUNT = 60
