@@ -18,7 +18,7 @@ class TestI2C(unittest.TestCase):
         self.i2c = I2C(self.driver)
 
     def test_write(self):
-        self.i2c.write(0xE0, 0x00, [0x51])
+        self.i2c.write(0x70, 0x00, [0x51])
 
         assert_that(self.driver.write_cmd,
                     called_once_with(0x55, [0xE0, 0x00, 0x01, 0x51]))
@@ -27,13 +27,13 @@ class TestI2C(unittest.TestCase):
         self.driver.check_i2c_ack.side_effect = UsbIssError
 
         assert_that(
-            calling(self.i2c.write).with_args(0xE0, 0x00, [0x51]),
+            calling(self.i2c.write).with_args(0x70, 0x00, [0x51]),
             raises(UsbIssError))
 
     def test_write_large_data(self):
         expected_data = list(range(60))
 
-        self.i2c.write(0xE0, 0x00, expected_data)
+        self.i2c.write(0x70, 0x00, expected_data)
 
         assert_that(self.driver.write_cmd,
                     called_once_with(0x55, [0xE0, 0x00, 60] + expected_data))
@@ -42,13 +42,13 @@ class TestI2C(unittest.TestCase):
         expected_data = list(range(61))
 
         assert_that(
-            calling(self.i2c.write).with_args(0xE0, 0x00, expected_data),
+            calling(self.i2c.write).with_args(0x70, 0x00, expected_data),
             raises(UsbIssError, "Attempted to write 61 bytes, maximum is 60"))
 
     def test_read(self):
         self.driver.read.return_value = [0x11, 0x22]
 
-        data = self.i2c.read(0xC1, 0x02, 2)
+        data = self.i2c.read(0x60, 0x02, 2)
 
         assert_that(self.driver.write_cmd,
                     called_once_with(0x55, [0xC1, 0x02, 2]))
@@ -59,14 +59,14 @@ class TestI2C(unittest.TestCase):
         self.driver.read.side_effect = UsbIssError
 
         assert_that(
-            calling(self.i2c.read).with_args(0xC1, 0x02, 2),
+            calling(self.i2c.read).with_args(0x60, 0x02, 2),
             raises(UsbIssError))
 
     def test_read_large_data(self):
         expected_data = list(range(60))
         self.driver.read.return_value = expected_data
 
-        data = self.i2c.read(0xC1, 0x02, 60)
+        data = self.i2c.read(0x60, 0x02, 60)
 
         assert_that(self.driver.write_cmd,
                     called_once_with(0x55, [0xC1, 0x02, 60]))
@@ -75,11 +75,11 @@ class TestI2C(unittest.TestCase):
 
     def test_read_overflow_failure(self):
         assert_that(
-            calling(self.i2c.read).with_args(0xC1, 0x02, 61),
+            calling(self.i2c.read).with_args(0x60, 0x02, 61),
             raises(UsbIssError, "Attempted to read 61 bytes, maximum is 60"))
 
     def test_write_single(self):
-        self.i2c.write_single(0x40, 0x00)
+        self.i2c.write_single(0x20, 0x00)
 
         assert_that(self.driver.write_cmd,
                     called_once_with(0x53, [0x40, 0x00]))
@@ -88,13 +88,13 @@ class TestI2C(unittest.TestCase):
         self.driver.check_i2c_ack.side_effect = UsbIssError
 
         assert_that(
-            calling(self.i2c.write_single).with_args(0x40, 0x00),
+            calling(self.i2c.write_single).with_args(0x20, 0x00),
             raises(UsbIssError))
 
     def test_read_single(self):
         self.driver.read.return_value = [0x42]
 
-        data = self.i2c.read_single(0x41)
+        data = self.i2c.read_single(0x20)
 
         assert_that(self.driver.write_cmd, called_once_with(0x53, [0x41]))
         assert_that(self.driver.read, called_once_with(1))
@@ -104,11 +104,11 @@ class TestI2C(unittest.TestCase):
         self.driver.read.side_effect = UsbIssError
 
         assert_that(
-            calling(self.i2c.read_single).with_args(0x41),
+            calling(self.i2c.read_single).with_args(0x20),
             raises(UsbIssError))
 
     def test_write_ad0(self):
-        self.i2c.write_ad0(0x30, [0x12, 0x34, 0x56, 0x78])
+        self.i2c.write_ad0(0x18, [0x12, 0x34, 0x56, 0x78])
 
         assert_that(self.driver.write_cmd,
                     called_once_with(0x54, [
@@ -119,13 +119,13 @@ class TestI2C(unittest.TestCase):
 
         assert_that(
             calling(self.i2c.write_ad0).
-            with_args(0x30, [0x12, 0x34, 0x56, 0x78]),
+            with_args(0x18, [0x12, 0x34, 0x56, 0x78]),
             raises(UsbIssError))
 
     def test_read_ad0(self):
         self.driver.read.return_value = [0x11, 0x22]
 
-        data = self.i2c.read_ad0(0xF1, 2)
+        data = self.i2c.read_ad0(0x78, 2)
 
         assert_that(self.driver.write_cmd, called_once_with(0x54, [0xF1, 2]))
         assert_that(self.driver.read, called_once_with(2))
@@ -135,11 +135,11 @@ class TestI2C(unittest.TestCase):
         self.driver.read.side_effect = UsbIssError
 
         assert_that(
-            calling(self.i2c.read_ad0).with_args(0xF1, 2),
+            calling(self.i2c.read_ad0).with_args(0x78, 2),
             raises(UsbIssError))
 
     def test_write_ad1(self):
-        self.i2c.write_ad1(0xE0, 0x00, [0x51])
+        self.i2c.write_ad1(0x70, 0x00, [0x51])
 
         assert_that(self.driver.write_cmd,
                     called_once_with(0x55, [0xE0, 0x00, 0x01, 0x51]))
@@ -148,13 +148,13 @@ class TestI2C(unittest.TestCase):
         self.driver.check_i2c_ack.side_effect = UsbIssError
 
         assert_that(
-            calling(self.i2c.write_ad1).with_args(0xE0, 0x00, [0x51]),
+            calling(self.i2c.write_ad1).with_args(0x70, 0x00, [0x51]),
             raises(UsbIssError))
 
     def test_write_ad1_large_data(self):
         expected_data = list(range(60))
 
-        self.i2c.write_ad1(0xE0, 0x00, expected_data)
+        self.i2c.write_ad1(0x70, 0x00, expected_data)
 
         assert_that(self.driver.write_cmd,
                     called_once_with(0x55, [0xE0, 0x00, 60] + expected_data))
@@ -163,13 +163,13 @@ class TestI2C(unittest.TestCase):
         expected_data = list(range(61))
 
         assert_that(
-            calling(self.i2c.write_ad1).with_args(0xE0, 0x00, expected_data),
+            calling(self.i2c.write_ad1).with_args(0x70, 0x00, expected_data),
             raises(UsbIssError, "Attempted to write 61 bytes, maximum is 60"))
 
     def test_read_ad1(self):
         self.driver.read.return_value = [0x11, 0x22]
 
-        data = self.i2c.read_ad1(0xC1, 0x02, 2)
+        data = self.i2c.read_ad1(0x60, 0x02, 2)
 
         assert_that(self.driver.write_cmd,
                     called_once_with(0x55, [0xC1, 0x02, 2]))
@@ -180,14 +180,14 @@ class TestI2C(unittest.TestCase):
         self.driver.read.side_effect = UsbIssError
 
         assert_that(
-            calling(self.i2c.read_ad1).with_args(0xC1, 0x02, 2),
+            calling(self.i2c.read_ad1).with_args(0x60, 0x02, 2),
             raises(UsbIssError))
 
     def test_read_ad1_large_data(self):
         expected_data = list(range(60))
         self.driver.read.return_value = expected_data
 
-        data = self.i2c.read_ad1(0xC1, 0x02, 60)
+        data = self.i2c.read_ad1(0x60, 0x02, 60)
 
         assert_that(self.driver.write_cmd,
                     called_once_with(0x55, [0xC1, 0x02, 60]))
@@ -196,11 +196,11 @@ class TestI2C(unittest.TestCase):
 
     def test_read_ad1_overflow_failure(self):
         assert_that(
-            calling(self.i2c.read_ad1).with_args(0xC1, 0x02, 61),
+            calling(self.i2c.read_ad1).with_args(0x60, 0x02, 61),
             raises(UsbIssError, "Attempted to read 61 bytes, maximum is 60"))
 
     def test_write_ad2(self):
-        self.i2c.write_ad2(0xA0, 0x1234, [0x51])
+        self.i2c.write_ad2(0x50, 0x1234, [0x51])
 
         assert_that(self.driver.write_cmd,
                     called_once_with(0x56, [0xA0, 0x12, 0x34, 1, 0x51]))
@@ -209,13 +209,13 @@ class TestI2C(unittest.TestCase):
         self.driver.check_i2c_ack.side_effect = UsbIssError
 
         assert_that(
-            calling(self.i2c.write_ad2).with_args(0xA0, 0x1234, [0x51]),
+            calling(self.i2c.write_ad2).with_args(0x50, 0x1234, [0x51]),
             raises(UsbIssError))
 
     def test_write_ad2_large_data(self):
         expected_data = list(range(59))
 
-        self.i2c.write_ad2(0xA0, 0x1234, expected_data)
+        self.i2c.write_ad2(0x50, 0x1234, expected_data)
 
         assert_that(self.driver.write_cmd,
                     called_once_with(0x56, [
@@ -225,13 +225,13 @@ class TestI2C(unittest.TestCase):
         expected_data = list(range(60))
 
         assert_that(
-            calling(self.i2c.write_ad2).with_args(0xA0, 0x1234, expected_data),
+            calling(self.i2c.write_ad2).with_args(0x50, 0x1234, expected_data),
             raises(UsbIssError, "Attempted to write 60 bytes, maximum is 59"))
 
     def test_read_ad2(self):
         self.driver.read.return_value = [0x11, 0x22]
 
-        data = self.i2c.read_ad2(0xA1, 0x4321, 2)
+        data = self.i2c.read_ad2(0x50, 0x4321, 2)
 
         assert_that(self.driver.write_cmd,
                     called_once_with(0x56, [0xA1, 0x43, 0x21, 2]))
@@ -242,14 +242,14 @@ class TestI2C(unittest.TestCase):
         self.driver.read.side_effect = UsbIssError
 
         assert_that(
-            calling(self.i2c.read_ad2).with_args(0xA1, 0x4321, 2),
+            calling(self.i2c.read_ad2).with_args(0x50, 0x4321, 2),
             raises(UsbIssError))
 
     def test_read_ad2_large_data(self):
         expected_data = list(range(64))
         self.driver.read.return_value = expected_data
 
-        data = self.i2c.read_ad2(0xA1, 0x4321, 64)
+        data = self.i2c.read_ad2(0x50, 0x4321, 64)
 
         assert_that(self.driver.write_cmd,
                     called_once_with(0x56, [0xA1, 0x43, 0x21, 64]))
@@ -258,7 +258,7 @@ class TestI2C(unittest.TestCase):
 
     def test_read_ad2_overflow_failure(self):
         assert_that(
-            calling(self.i2c.read_ad2).with_args(0xC1, 0x02, 65),
+            calling(self.i2c.read_ad2).with_args(0x50, 0x02, 65),
             raises(UsbIssError, "Attempted to read 65 bytes, maximum is 64"))
 
     def test_direct(self):
@@ -302,7 +302,7 @@ class TestI2C(unittest.TestCase):
 
     def test_test_with_device(self):
         self.driver.read.return_value = [0xFF]
-        device_present = self.i2c.test(0xA0)
+        device_present = self.i2c.test(0x50)
 
         assert_that(self.driver.write_cmd, called_once_with(0x58, [0xA0]))
         assert_that(self.driver.read, called_once_with(1))
@@ -311,7 +311,7 @@ class TestI2C(unittest.TestCase):
     def test_test_without_device(self):
         self.driver.read.return_value = [0x00]
 
-        device_present = self.i2c.test(0xA0)
+        device_present = self.i2c.test(0x50)
 
         assert_that(self.driver.write_cmd, called_once_with(0x58, [0xA0]))
         assert_that(self.driver.read, called_once_with(1))

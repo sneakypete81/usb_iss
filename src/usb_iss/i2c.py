@@ -20,9 +20,10 @@ class I2C(object):
             iss.setup_i2c()
 
             # Write and read back some data
+            # NOTE: I2C methods use 7-bit device addresses (0x00 - 0x7F)
 
-            iss.i2c.write(0xC4, 0, [0, 1, 2]);
-            data = iss.i2c.read(0xC4, 0, 3)
+            iss.i2c.write(0x62, 0, [0, 1, 2]);
+            data = iss.i2c.read(0x62, 0, 3)
 
             print(data)
             # [0, 1, 2]
@@ -37,7 +38,7 @@ class I2C(object):
         majority of devices.
 
         Args:
-            address (int): I2C address of the device.
+            address (int): 7-bit I2C address of the device (0x00 - 0x7F).
             register (int): Internal register address to write
                 (0x00 - 0xFF).
             data (list of int): List of bytes to write to the device.
@@ -51,7 +52,7 @@ class I2C(object):
         of devices.
 
         Args:
-            address (int): I2C address of the device.
+            address (int): 7-bit I2C address of the device (0x00 - 0x7F).
             register (int): Internal register address to read (0x00 - 0xFF).
             byte_count (int): Number of bytes to read.
         Returns:
@@ -64,12 +65,12 @@ class I2C(object):
         Write a single byte to an I2C device.
 
         Args:
-            address (int): I2C address of the device.
+            address (int): 7-bit I2C address of the device (0x00 - 0x7F).
             data_byte (int): Data byte to write to the device.
         """
-        address = address & ~I2C_RD
+        address_8bit = address << 1
         self._drv.write_cmd(defs.Command.I2C_SGL.value,
-                            [address, data_byte])
+                            [address_8bit, data_byte])
         self._drv.check_i2c_ack()
 
     def read_single(self, address):
@@ -77,12 +78,12 @@ class I2C(object):
         Read a single byte from an I2C device.
 
         Args:
-            address (int): I2C address of the device.
+            address (int): 7-bit I2C address of the device (0x00 - 0x7F).
         Returns:
             int: Data byte read from the device.
         """
-        address = address | I2C_RD
-        self._drv.write_cmd(defs.Command.I2C_SGL.value, [address])
+        address_8bit = (address << 1) | I2C_RD
+        self._drv.write_cmd(defs.Command.I2C_SGL.value, [address_8bit])
         return self._drv.read(1)[0]
 
     def write_ad0(self, address, data):
@@ -91,12 +92,12 @@ class I2C(object):
         or where the internal register address does not require resetting.
 
         Args:
-            address (int): I2C address of the device.
+            address (int): 7-bit I2C address of the device (0x00 - 0x7F).
             data (list of int): List of bytes to write to the device.
         """
-        address = address & ~I2C_RD
+        address_8bit = address << 1
         self._drv.write_cmd(defs.Command.I2C_AD0.value,
-                            [address, len(data)] + data)
+                            [address_8bit, len(data)] + data)
         self._drv.check_i2c_ack()
 
     def read_ad0(self, address, byte_count):
@@ -105,14 +106,14 @@ class I2C(object):
         or where the internal register address does not require resetting.
 
         Args:
-            address (int): I2C address of the devie.
+            address (int): 7-bit I2C address of the devie.
             byte_count (int): Number of bytes to read.
         Returns:
             list of int: List of bytes read from the device.
         """
-        address = address | I2C_RD
+        address_8bit = (address << 1) | I2C_RD
         self._drv.write_cmd(defs.Command.I2C_AD0.value,
-                            [address, byte_count])
+                            [address_8bit, byte_count])
         return self._drv.read(byte_count)
 
     def write_ad1(self, address, register, data):
@@ -121,7 +122,7 @@ class I2C(object):
         address.
 
         Args:
-            address (int): I2C address of the device.
+            address (int): 7-bit I2C address of the device (0x00 - 0x7F).
             register (int): Internal register address to write (0x00 - 0xFF).
             data (list of int): List of bytes to write to the device.
         """
@@ -130,9 +131,9 @@ class I2C(object):
                 "Attempted to write %d bytes, maximum is %d" %
                 (len(data), defs.I2C_AD1_MAX_WRITE_BYTE_COUNT))
 
-        address = address & ~I2C_RD
+        address_8bit = address << 1
         self._drv.write_cmd(defs.Command.I2C_AD1.value,
-                            [address, register, len(data)] + data)
+                            [address_8bit, register, len(data)] + data)
         self._drv.check_i2c_ack()
 
     def read_ad1(self, address, register, byte_count):
@@ -141,7 +142,7 @@ class I2C(object):
         address.
 
         Args:
-            address (int): I2C address of the device.
+            address (int): 7-bit I2C address of the device (0x00 - 0x7F).
             register (int): Internal register address to read (0x00 - 0xFF).
             byte_count (int): Number of bytes to read.
         Returns:
@@ -152,9 +153,9 @@ class I2C(object):
                 "Attempted to read %d bytes, maximum is %d" %
                 (byte_count, defs.I2C_AD1_MAX_READ_BYTE_COUNT))
 
-        address = address | I2C_RD
+        address_8bit = (address << 1) | I2C_RD
         self._drv.write_cmd(defs.Command.I2C_AD1.value,
-                            [address, register, byte_count])
+                            [address_8bit, register, byte_count])
         return self._drv.read(byte_count)
 
     def write_ad2(self, address, register, data):
@@ -163,7 +164,7 @@ class I2C(object):
         address.
 
         Args:
-            address (int): I2C address of the device.
+            address (int): 7-bit I2C address of the device (0x00 - 0x7F).
             register (int): Internal register address to write
                 (0x0000 - 0xFFFF).
             data (list of int): List of bytes to write to the device.
@@ -173,11 +174,12 @@ class I2C(object):
                 "Attempted to write %d bytes, maximum is %d" %
                 (len(data), defs.I2C_AD2_MAX_WRITE_BYTE_COUNT))
 
-        address = address & ~I2C_RD
+        address_8bit = address << 1
         reg_high = register >> 8
         reg_low = register & 0xFF
-        self._drv.write_cmd(defs.Command.I2C_AD2.value,
-                            [address, reg_high, reg_low, len(data)] + data)
+        self._drv.write_cmd(
+            defs.Command.I2C_AD2.value,
+            [address_8bit, reg_high, reg_low, len(data)] + data)
         self._drv.check_i2c_ack()
 
     def read_ad2(self, address, register, byte_count):
@@ -186,7 +188,7 @@ class I2C(object):
         address.
 
         Args:
-            address (int): I2C address of the device.
+            address (int): 7-bit I2C address of the device (0x00 - 0x7F).
             register (int): Internal register address to read
                 (0x0000 - 0xFFFF).
             byte_count (int): Number of bytes to read.
@@ -198,11 +200,11 @@ class I2C(object):
                 "Attempted to read %d bytes, maximum is %d" %
                 (byte_count, defs.I2C_AD2_MAX_READ_BYTE_COUNT))
 
-        address = address | I2C_RD
+        address_8bit = (address << 1) | I2C_RD
         reg_high = register >> 8
         reg_low = register & 0xFF
         self._drv.write_cmd(defs.Command.I2C_AD2.value,
-                            [address, reg_high, reg_low, byte_count])
+                            [address_8bit, reg_high, reg_low, byte_count])
         return self._drv.read(byte_count)
 
     def direct(self, data):
@@ -248,10 +250,11 @@ class I2C(object):
         Check whether a device responds at the specified I2C addresss.
 
         Args:
-            address (int): I2C address of the device.
+            address (int): 7-bit I2C address of the device (0x00 - 0x7F).
 
         Returns:
             bool: True if the device responds with an ACK.
         """
-        self._drv.write_cmd(defs.Command.I2C_TEST.value, [address])
+        address_8bit = address << 1
+        self._drv.write_cmd(defs.Command.I2C_TEST.value, [address_8bit])
         return self._drv.read(1) != [defs.I2CTestResponse.NO_DEVICE.value]
