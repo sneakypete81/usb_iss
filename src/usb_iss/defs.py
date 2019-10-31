@@ -4,55 +4,10 @@ Definitions from http://www.robot-electronics.co.uk/htm/usb_iss_tech.htm.
 from enum import Enum
 
 
-class ResponseCode(Enum):
-    """
-    Note: For I2C: NACK = 0x00, ACK = Non-zero.
-    """
-    NACK = 0x00
-    ACK = 0xFF
-
-
-class SubCommand(Enum):
-    ISS_VERSION = 0x01
-    ISS_MODE = 0x02
-    GET_SER_NUM = 0x03
-
-
-class Mode(Enum):
-    IO_MODE = 0x00
-    IO_CHANGE = 0x10
-    I2C_S_20KHZ = 0x20
-    I2C_S_50KHZ = 0x30
-    I2C_S_100KHZ = 0x40
-    I2C_S_400KHZ = 0x50
-    I2C_H_100KHZ = 0x60
-    I2C_H_400KHZ = 0x70
-    I2C_H_1000KHZ = 0x80
-    SPI_MODE = 0x90
-    SERIAL = 0x01
-
-
-class ModeError(Enum):
-    UNKNOWN_COMMAND = 0x05
-    INTERNAL_ERROR_1 = 0x06
-    INTERNAL_ERROR_2 = 0x07
-
-
-class IOType(Enum):
-    OUTPUT_LOW = 0x00
-    OUTPUT_HIGH = 0x01
-    DIGITAL_INPUT = 0x02
-    ANALOGUE_INPUT = 0x03
-
-
-class SPIMode(Enum):
-    TX_ACTIVE_TO_IDLE_IDLE_LOW = 0x90
-    TX_ACTIVE_TO_IDLE_IDLE_HIGH = 0x91
-    TX_IDLE_TO_ACTIVE_IDLE_LOW = 0x92
-    TX_IDLE_TO_ACTIVE_IDLE_HIGH = 0x93
-
-
 class Command(Enum):
+    """
+    Command code sent as the first byte.
+    """
     I2C_SGL = 0x53
     I2C_AD0 = 0x54
     I2C_AD1 = 0x55
@@ -67,7 +22,56 @@ class Command(Enum):
     GET_AD = 0x65
 
 
+class SubCommand(Enum):
+    """
+    Internal subcommand used with Command.USB_ISS.
+    """
+    ISS_VERSION = 0x01
+    ISS_MODE = 0x02
+    GET_SER_NUM = 0x03
+
+
+class Mode(Enum):
+    """
+    USB-ISS module operating modes.
+    """
+    IO_MODE = 0x00
+    IO_CHANGE = 0x10
+    I2C_S_20KHZ = 0x20
+    I2C_S_50KHZ = 0x30
+    I2C_S_100KHZ = 0x40
+    I2C_S_400KHZ = 0x50
+    I2C_H_100KHZ = 0x60
+    I2C_H_400KHZ = 0x70
+    I2C_H_1000KHZ = 0x80
+    SPI_MODE = 0x90
+    SERIAL = 0x01
+
+
+class IOType(Enum):
+    """
+    IO configuration for a single pin.
+    """
+    OUTPUT_LOW = 0x00
+    OUTPUT_HIGH = 0x01
+    DIGITAL_INPUT = 0x02
+    ANALOGUE_INPUT = 0x03
+
+
+class SPIMode(Enum):
+    """
+    SPI clock phase setting.
+    """
+    TX_ACTIVE_TO_IDLE_IDLE_LOW = 0x90
+    TX_ACTIVE_TO_IDLE_IDLE_HIGH = 0x91
+    TX_IDLE_TO_ACTIVE_IDLE_LOW = 0x92
+    TX_IDLE_TO_ACTIVE_IDLE_HIGH = 0x93
+
+
 class I2CDirect(Enum):
+    """
+    I2C_DIRECT commands.
+    """
     START = 0x01
     RESTART = 0x02
     STOP = 0x03
@@ -106,7 +110,28 @@ class I2CDirect(Enum):
     WRITE16 = 0x3F
 
 
+class ResponseCode(Enum):
+    """
+    First byte of a response.
+    Note: For I2C: NACK = 0x00, ACK = Non-zero.
+    """
+    NACK = 0x00
+    ACK = 0xFF
+
+
+class ModeError(Enum):
+    """
+    Error codes for the mode setting commands (second byte of the response).
+    """
+    UNKNOWN_COMMAND = 0x05
+    INTERNAL_ERROR_1 = 0x06
+    INTERNAL_ERROR_2 = 0x07
+
+
 class I2CDirectError(Enum):
+    """
+    Error codes for the I2C_DIRECT command (second byte of the response).
+    """
     DEVICE_ERROR = 0x01
     BUFFER_OVERFLOW = 0x02
     BUFFER_UNDERFLOW = 0x03

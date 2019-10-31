@@ -19,19 +19,25 @@ Python library for the USB-ISS module.
 .. image:: https://www.robot-electronics.co.uk/images/usb-iss-300.png
     :alt: USB ISS Module
 
-**USB ISS module documentation:**
+Documentation
+-------------
+
+**USB-ISS hardware module:**
   https://www.robot-electronics.co.uk/htm/usb_iss_tech.htm
 
-**Python API documentation:**
+**USB-ISS Python library (this project):**
   https://usb-iss.readthedocs.io
 
 Features
 --------
 
-* I2C Mode
-* IO Mode
-* SPI Mode
-* Serial Mode
+* Supports all USB-ISS functions (I2C, IO, SPI, Serial)
+
+* Cross-platform (Windows, Linux, MacOS, BSD)
+
+* Supports Python 2.7 & 3.5+
+
+* Comprehensive documentation and unit test suite
 
 Usage Example
 -------------
@@ -59,8 +65,6 @@ Installing
 .. code-block:: bash
 
     pip install usb-iss
-
-Supports Python 2.7 & 3.5+.
 
 ----
 
