@@ -79,13 +79,11 @@ coverage: ## check code coverage quickly with the default Python
 	$(VENV) coverage html
 	$(BROWSER) htmlcov/index.html
 
-docs: ## generate Sphinx HTML documentation, including API docs
+docs-setup: ## generate list of API modules for Sphinx HTML documentation
 	rm -f docs/usb_iss.rst
-	rm -f docs/modules.rst
-
-	# Generate API documentation input
 	$(VENV) sphinx-apidoc --no-toc --module-first -o docs/ src $(API_EXCLUDE)
 
+docs: ## generate Sphinx HTML documentation, including API docs
 	# Generate HTML documentation
 	$(VENV) $(MAKE) -C docs clean
 	$(VENV) $(MAKE) -C docs html
