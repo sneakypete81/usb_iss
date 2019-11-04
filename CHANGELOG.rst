@@ -2,6 +2,11 @@
 Changelog
 =========
 
+2.0.0 (2019-11-04)
+------------------
+
+* BREAKING CHANGE: Use 7-bit I2C device addresses
+
 1.0.0 (2019-10-16)
 ------------------
 
