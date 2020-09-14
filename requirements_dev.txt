@@ -1,5 +1,5 @@
 bumpversion==0.5.3
-coverage==5.2.1
+coverage==5.3
 flake8==3.8.3
 matchmock==0.7.1
 # Mock is not included in Python2
