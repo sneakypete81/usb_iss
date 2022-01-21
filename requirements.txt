@@ -1,3 +1,1 @@
-# backport enum from Python3
-enum34==1.1.6;  python_version=='2.7'
 pyserial==3.5
