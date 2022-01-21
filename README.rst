@@ -35,8 +35,6 @@ Features
 
 * Cross-platform (Windows, Linux, MacOS, BSD)
 
-* Supports Python 2.7 & 3.5+
-
 * Comprehensive documentation and unit test suite
 
 Usage Example
