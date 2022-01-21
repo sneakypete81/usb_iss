@@ -2,6 +2,11 @@
 Changelog
 =========
 
+2.0.1 (2021-01-21)
+------------------
+
+* Add serial+I2C operating modes to read_iss_mode()
+
 2.0.0 (2019-11-04)
 ------------------
 
