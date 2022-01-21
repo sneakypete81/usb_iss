@@ -312,6 +312,15 @@ class TestUSbIss(unittest.TestCase):
         assert_that(self.driver.write_cmd, called_once_with(0x5A, [0x01]))
         assert_that(self.driver.read, called_once_with(3))
 
+    def test_read_iss_mode_with_serial(self):
+        self.driver.read.return_value = [0x07, 0x02, 0x71]
+
+        result = self.usb_iss.read_iss_mode()
+
+        assert_that(result, is_(defs.Mode.SERIAL_I2C_H_400KHZ))
+        assert_that(self.driver.write_cmd, called_once_with(0x5A, [0x01]))
+        assert_that(self.driver.read, called_once_with(3))
+
     def test_read_serial_number(self):
         self.driver.read.return_value = [
             0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x31]
