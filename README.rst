@@ -4,11 +4,11 @@ USB-ISS Python Library
 
 .. image:: https://img.shields.io/pypi/v/usb_iss.svg
     :target: https://pypi.python.org/pypi/usb_iss
-    :alt: PyPi
+    :alt: PyPI
 
-.. image:: https://api.travis-ci.org/sneakypete81/usb_iss.svg?branch=master
-    :target: https://travis-ci.org/sneakypete81/usb_iss/branches
-    :alt: TravisCI
+.. image:: https://github.com/github/docs/actions/workflows/main.yml/badge.svg
+    :target: https://github.com/sneakypete81/usb_iss/actions
+    :alt: Github Actions
 
 .. image:: https://readthedocs.org/projects/usb-iss/badge/?version=latest
     :target: https://usb-iss.readthedocs.io/en/latest/?badge=latest
