@@ -10,6 +10,6 @@ sphinxcontrib-napoleon==0.7
 sphinx-rtd-theme==0.4.3
 twine==3.7.1; python_version=='3.8'
 tox==3.24.5
-wheel==0.37.1
+wheel==0.38.1
 
 -r requirements.txt
