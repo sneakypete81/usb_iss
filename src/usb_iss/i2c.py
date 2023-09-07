@@ -106,7 +106,7 @@ class I2C(object):
         or where the internal register address does not require resetting.
 
         Args:
-            address (int): 7-bit I2C address of the devie.
+            address (int): 7-bit I2C address of the device.
             byte_count (int): Number of bytes to read.
         Returns:
             list of int: List of bytes read from the device.
@@ -223,7 +223,7 @@ class I2C(object):
         Example:
             ::
 
-                # Equivalent to iss.i2c.write_single(0x40, 0x55)
+                # Equivalent to iss.i2c.write_single(0x20, 0x55)
                 iss.i2c.direct([
                     defs.I2CDirect.START,
                     defs.I2CDirect.WRITE2,
